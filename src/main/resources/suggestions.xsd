@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    TEI-Completer suggestions schema
+    @author: Adam Retter
+    @version: 1.0
+    26 January 2016
+-->
+<xs:schema targetNamespace="http://humanistika.org/ns/tei-completer" version="1.0"
+    elementFormDefault="qualified" 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:tc="http://humanistika.org/ns/tei-completer"
+    xmlns:h="http://www.w3.org/1999/xhtml">
+    <xs:annotation>
+        <xs:documentation>XML Schema for auto-complete suggestions provided to the TEI-Completer from a remote server.</xs:documentation>
+    </xs:annotation>
+    <xs:element name="suggestions">
+        <xs:annotation>
+            <xs:documentation>A list of suggestions to provide to the user for auto-complete options</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="tc:suggestion" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="suggestion">
+        <xs:annotation>
+            <xs:documentation>A suggestion to provide to the user for auto-complete</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="tc:value"/>
+                <xs:element ref="tc:description" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="value" type="xs:string">
+        <xs:annotation>
+            <xs:documentation>The value to use for the suggestion</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="description" type="xs:string">
+        <xs:annotation>
+            <xs:documentation>A description of the value used for the suggestion</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+</xs:schema>
