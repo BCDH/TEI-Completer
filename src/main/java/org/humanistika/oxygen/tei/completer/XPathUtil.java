@@ -47,7 +47,7 @@ public class XPathUtil {
     private static final XPathParser parser = Parboiled.createParser(XPathParser.class, Boolean.TRUE);
 
     public static Expr parseXPath(final String xpath) {
-        final ParseRunner<ASTNode> parseRunner = new RecoveringParseRunner<ASTNode>(parser.withEOI(parser.XPath()));
+        final ParseRunner<ASTNode> parseRunner = new RecoveringParseRunner<>(parser.withEOI(parser.XPath()));
         final ParsingResult<ASTNode> result = parseRunner.run(xpath + Chars.EOI);
 
         if(LOGGER.isDebugEnabled()) {

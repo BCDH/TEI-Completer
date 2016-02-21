@@ -17,19 +17,27 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-package org.humanistika.oxygen.tei.completer.configuration;
+package org.humanistika.oxygen.tei.completer.remote;
 
-import org.humanistika.oxygen.tei.completer.configuration.beans.AutoComplete;
-
-import java.util.List;
+import org.humanistika.ns.tei_completer.Suggestions;
+import org.humanistika.oxygen.tei.completer.configuration.beans.RequestInfo;
 
 /**
- * TEI-Completer Configuration interface
+ * TEI Completer Client interface for getting auto-complete suggestions from a remote server
  *
  * @author Adam Retter, Evolved Binary Ltd <adam.retter@googlemail.com>
  * @version 1.0
  * @serial 20160126
  */
-public interface Configuration {
-    List<AutoComplete> getAutoCompletes();
+public interface Client {
+
+    /**
+     * Retrieve the suggestions for auto-complete from the server
+     *
+     * @param selection The selection
+     * @param dependent The dependent or null
+     *
+     * @return A list of auto-complete suggestions from the server
+     */
+    Suggestions getSuggestions(final RequestInfo requestInfo, final String selection, final String dependent);
 }

@@ -19,7 +19,7 @@
  */
 package org.humanistika.oxygen.tei.completer.configuration.beans;
 
-import java.io.File;
+import java.nio.file.Path;
 
 /**
  * Configuration details for an action that should be applied to a response
@@ -29,9 +29,9 @@ import java.io.File;
  * @serial 20160126
  */
 public class ResponseAction {
-    private final File transformation;
+    private final Path transformation;
 
-    public ResponseAction(final File transformation) {
+    public ResponseAction(final Path transformation) {
         this.transformation = transformation;
     }
 
@@ -40,7 +40,7 @@ public class ResponseAction {
      *
      * @return The path to the transformation
      */
-    public File getTransformation() {
+    public Path getTransformation() {
         return transformation;
     }
 }

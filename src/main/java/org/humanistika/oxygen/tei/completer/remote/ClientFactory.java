@@ -17,19 +17,33 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-package org.humanistika.oxygen.tei.completer.configuration;
+package org.humanistika.oxygen.tei.completer.remote;
 
-import org.humanistika.oxygen.tei.completer.configuration.beans.AutoComplete;
-
-import java.util.List;
+import org.humanistika.oxygen.tei.completer.remote.impl.JerseyClient;
 
 /**
- * TEI-Completer Configuration interface
+ * Factory for creating instances of Client
  *
  * @author Adam Retter, Evolved Binary Ltd <adam.retter@googlemail.com>
  * @version 1.0
  * @serial 20160126
  */
-public interface Configuration {
-    List<AutoComplete> getAutoCompletes();
+public class ClientFactory {
+    private final static ClientFactory instance = new ClientFactory();
+
+    private ClientFactory() {
+    }
+
+    public final static ClientFactory getInstance() {
+        return instance;
+    }
+
+    /**
+     * Creates a default Client implementation
+     *
+     * @return The Client implementation
+     */
+    public Client createClient() {
+        return new JerseyClient();
+    }
 }

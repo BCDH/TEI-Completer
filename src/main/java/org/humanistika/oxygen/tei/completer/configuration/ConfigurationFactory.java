@@ -23,7 +23,10 @@ import org.humanistika.oxygen.tei.completer.configuration.impl.XmlConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Factory for creating instances of TeiCompleter
@@ -39,7 +42,7 @@ public class ConfigurationFactory {
     private final static String CONFIG_FOLDER_NAME = ".bcdh-tei-completer";
     private final static String CONFIG_FILE_NAME_PREFIX = "config";
 
-    private final File configDir;
+    private final Path configDir;
 
     private ConfigurationFactory() {
         this.configDir = getConfigDir();
@@ -55,7 +58,7 @@ public class ConfigurationFactory {
      * @return The loaded Configuration
      */
     public Configuration loadConfiguration() {
-        return new XmlConfiguration(new File(configDir, CONFIG_FILE_NAME_PREFIX + ".xml"));
+        return new XmlConfiguration(configDir.resolve(CONFIG_FILE_NAME_PREFIX + ".xml"));
     }
 
     /**
@@ -65,24 +68,26 @@ public class ConfigurationFactory {
      *
      * @return The path to the configuration directory
      */
-    private File getConfigDir() {
+    private Path getConfigDir() {
         final String userHome = System.getProperty("user.home");
         final String platform = System.getProperty("platform");
 
-        final File configDir;
+        final Path configDir;
         if(platform != null && platform.startsWith("WIN")) {
-            final File appData = new File(userHome,  WIN32_USER_APPLICATION_DATA_FOLDER_NAME);
-            if(!(appData.exists() && appData.canWrite())) {
-                LOGGER.error("Windows Application Data folder is not accessible: " + appData.getAbsolutePath());
+            final Path appData = Paths.get(userHome,  WIN32_USER_APPLICATION_DATA_FOLDER_NAME);
+            if(!(Files.exists(appData) && Files.isWritable(appData))) {
+                LOGGER.error("Windows Application Data folder is not accessible: " + appData.toAbsolutePath());
             }
-            configDir = new File(appData, CONFIG_FOLDER_NAME);
+            configDir = appData.resolve(CONFIG_FOLDER_NAME);
         } else {
-            configDir = new File(userHome, CONFIG_FOLDER_NAME);
+            configDir = Paths.get(userHome, CONFIG_FOLDER_NAME);
         }
 
-        if(!configDir.exists()) {
-            if(!configDir.mkdirs()) {
-                LOGGER.error("Unable to create configuration directory: " + configDir.getAbsolutePath());
+        if(!Files.exists(configDir)) {
+            try {
+                return Files.createDirectories(configDir);
+            } catch(final IOException e) {
+                LOGGER.error("Unable to create configuration directory: " + configDir.toAbsolutePath(), e);
             }
         }
 

@@ -36,6 +36,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -56,10 +58,10 @@ import static org.humanistika.oxygen.tei.completer.configuration.beans.RequestIn
  */
 public class XmlConfiguration implements Configuration {
     private final static Logger LOGGER = LoggerFactory.getLogger(XmlConfiguration.class);
-    private final File configFile;
+    private final Path configFile;
     private List<AutoComplete> autoCompletes = null;
 
-    public XmlConfiguration(final File configFile) {
+    public XmlConfiguration(final Path configFile) {
         this.configFile = configFile;
     }
 
@@ -75,24 +77,24 @@ public class XmlConfiguration implements Configuration {
 
     @Nullable
     private List<AutoComplete> loadAutoCompletes() {
-        if(!configFile.exists()) {
-            LOGGER.error("Configuration file does not exist: " + configFile.getAbsolutePath());
+        if(Files.notExists(configFile)) {
+            LOGGER.error("Configuration file does not exist: " + configFile.toAbsolutePath());
             return null;
         }
 
         try {
             final JAXBContext jaxbContext = JAXBContext.newInstance(Config.class);
             final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-            final Config config = (Config)unmarshaller.unmarshal(configFile);
+            final Config config = (Config)unmarshaller.unmarshal(configFile.toFile());
             return expandConfig(config);
         } catch(final JAXBException e) {
-            LOGGER.error("Unable to load config: " + configFile.getAbsolutePath(), e);
+            LOGGER.error("Unable to load config: " + configFile.toAbsolutePath(), e);
             return null;
         }
     }
 
     private final List<AutoComplete> expandConfig(final Config config) {
-        final List<AutoComplete> autoCompletes = new ArrayList<AutoComplete>();
+        final List<AutoComplete> autoCompletes = new ArrayList<>();
         for(int i = 0; i <  config.getAutoComplete().size(); i++) {
             final org.humanistika.ns.tei_completer.AutoComplete autoComplete  = config.getAutoComplete().get(i);
             final Map<String, String> namespaceBindings = mergeNamespaceBindings(
@@ -102,7 +104,6 @@ public class XmlConfiguration implements Configuration {
                 dependent = null;
             } else {
                 dependent = new Dependent(
-                        autoComplete.getDependent().isRequired(),
                         autoComplete.getDependent().getDefault(),
                         autoComplete.getDependent().getValue()
                 );
@@ -121,7 +122,7 @@ public class XmlConfiguration implements Configuration {
             if(autoComplete.getResponse() == null) {
                 responseAction = null;
             } else {
-                responseAction = new ResponseAction(new File(configFile.getParentFile(), autoComplete.getResponse().getTransformation()));
+                responseAction = new ResponseAction(configFile.resolveSibling(autoComplete.getResponse().getTransformation()));
             }
 
             autoCompletes.add(new AutoComplete(
@@ -182,10 +183,14 @@ public class XmlConfiguration implements Configuration {
         }
     }
 
-    private Map<String,String> mergeNamespaceBindings(final NamespaceBindings global, final NamespaceBindings specific) {
-        final Map<String, String> namespaceBindings = new HashMap<String, String>();
-        addBindings(namespaceBindings, global.getBinding());
-        addBindings(namespaceBindings, specific.getBinding());
+    private Map<String,String> mergeNamespaceBindings(@Nullable final NamespaceBindings global, @Nullable final NamespaceBindings specific) {
+        final Map<String, String> namespaceBindings = new HashMap<>();
+        if(global != null) {
+            addBindings(namespaceBindings, global.getBinding());
+        }
+        if(specific != null) {
+            addBindings(namespaceBindings, specific.getBinding());
+        }
         return namespaceBindings;
     }
 
@@ -194,146 +199,4 @@ public class XmlConfiguration implements Configuration {
             namespaceBindings.put(binding.getPrefix(), binding.getNamespace());
         }
     }
-
-
-
-//    private final static Logger LOG = Logger.getLogger(XmlConfiguration.class);
-
-//    private final static String PROP_BASE_URI = "baseuri";
-//    private final static String PROP_USERNAME = "username";
-//    private final static String PROP_PASSWORD = "password";
-//    private final static String PROP_LEMMA_ACTION = "lemmaAction";
-//    private final static String PROP_ANA_ACTION = "anaAction";
-//    private final static String PROP_ANA_UNKNOWN_VALUE = "anaUnknownValue";
-//    private final static String PROP_ENABLE_MISSING_LEMMA_MESSAGE = "enableMissingLemmaMessage";
-//    private final static String PROP_MISSING_LEMMA_MESSAGE = "missingLemmaMessage";
-//
-//    private final static String DEFAULT_BASE_URI = "http://transpoetika.org/multext";
-//    private final static String DEFAULT_USERNAME = "oxygen";
-//    private final static String DEFAULT_PASSWORD = "oxygen";
-//    private final static String DEFAULT_LEMMA_ACTION = "getlemma";
-//    private final static String DEFAULT_ANA_ACTION = "getana";
-//    private final static String DEFAULT_ANA_UNKNOWN_VALUE = "0";
-//    private final static String DEFAULT_ENABLE_MISSING_LEMMA_MESSAGE = "true";
-//    private final static String DEFAULT_MISSING_LEMMA_MESSAGE = "Please enter a value for lemma first.";
-//
-//    private Properties properties;
-
-//    @Override
-//    public String getBaseUri() {
-//        return getProperties().getProperty(PROP_BASE_URI, DEFAULT_BASE_URI);
-//    }
-//
-//    @Override
-//    public String getLemmaAction() {
-//        return getProperties().getProperty(PROP_LEMMA_ACTION, DEFAULT_LEMMA_ACTION);
-//    }
-//
-//    @Override
-//    public String getAnaAction() {
-//        return getProperties().getProperty(PROP_ANA_ACTION, DEFAULT_ANA_ACTION);
-//    }
-//
-//    @Override
-//    public String getAnaUnknownValue() {
-//        return getProperties().getProperty(PROP_ANA_UNKNOWN_VALUE, DEFAULT_ANA_UNKNOWN_VALUE);
-//    }
-//
-//    @Override
-//    public String getUsername() {
-//        return getProperties().getProperty(PROP_USERNAME, DEFAULT_USERNAME);
-//    }
-//
-//    @Override
-//    public String getPassword() {
-//        return getProperties().getProperty(PROP_PASSWORD, DEFAULT_PASSWORD);
-//    }
-//
-//    @Override
-//    public String getMissingLemmaMessage() {
-//        return getProperties().getProperty(PROP_MISSING_LEMMA_MESSAGE, DEFAULT_MISSING_LEMMA_MESSAGE);
-//    }
-//
-//    @Override
-//    public boolean isMissingLemmaMessageEnabled() {
-//        return getProperties().getProperty(PROP_ENABLE_MISSING_LEMMA_MESSAGE, DEFAULT_ENABLE_MISSING_LEMMA_MESSAGE).equals("true");
-//    }
-//
-//    /**
-//     * Lazy loading of the properties configuration file.
-//     * The file is loaded form the classpath.
-//     *
-//     * @return The properties that were loaded
-//     */
-//    private Properties getProperties() {
-//        if(properties == null) {
-//            properties = new Properties();
-//            InputStream isProperties = null;
-//            File fProperties = null;
-//            try {
-//
-//                fProperties = getPropertiesFile();
-//
-//                if(!fProperties.exists())
-//                    createDefaultPropertiesFile(fProperties);
-//
-//                isProperties = new FileInputStream(fProperties);
-//
-//                if(isProperties != null) {
-//                    properties.load(isProperties);
-//                    LOG.debug("Loaded properties configuration from file '" + fProperties.getAbsolutePath() + "'");
-//                } else {
-//                    LOG.warn("Could not load the properties configuration file '" + fProperties.getAbsolutePath() + "' falling back to defaults!");
-//                }
-//            } catch(IOException ioe) {
-//                LOG.error("Could not parse the properties configuration file '" + fProperties.getAbsolutePath() +"'", ioe);
-//            } finally {
-//                if(isProperties != null) {
-//                    try {
-//                        isProperties.close();
-//                    } catch(IOException ioe) {
-//                        LOG.warn("Could not close the properties input stream for file '" + fProperties.getAbsolutePath() + "'", ioe);
-//                    }
-//                }
-//            }
-//        }
-//
-//        return properties;
-//    }
-//
-//    /**
-//     * Creates a properties file containing default values
-//     *
-//     * @param fProperties The properties file to create
-//     */
-//    private void createDefaultPropertiesFile(File fProperties) {
-//
-//        Properties defaultProperties = new Properties();
-//
-//        defaultProperties.setProperty(PROP_BASE_URI, DEFAULT_BASE_URI);
-//        defaultProperties.setProperty(PROP_LEMMA_ACTION, DEFAULT_LEMMA_ACTION);
-//        defaultProperties.setProperty(PROP_ANA_ACTION, DEFAULT_ANA_ACTION);
-//        defaultProperties.setProperty(PROP_ANA_UNKNOWN_VALUE, DEFAULT_ANA_UNKNOWN_VALUE);
-//        defaultProperties.setProperty(PROP_USERNAME, DEFAULT_USERNAME);
-//        defaultProperties.setProperty(PROP_PASSWORD, DEFAULT_PASSWORD);
-//        defaultProperties.setProperty(PROP_ENABLE_MISSING_LEMMA_MESSAGE, DEFAULT_ENABLE_MISSING_LEMMA_MESSAGE);
-//        defaultProperties.setProperty(PROP_MISSING_LEMMA_MESSAGE, DEFAULT_MISSING_LEMMA_MESSAGE);
-//
-//        OutputStream os = null;
-//
-//        try {
-//            fProperties.getParentFile().mkdirs();
-//            os = new FileOutputStream(fProperties);
-//            defaultProperties.store(os, "Multext Oxygen Client Configuration");
-//
-//        } catch(IOException ioe) {
-//            if(os != null) {
-//                try {
-//                    os.close();
-//                } catch(IOException ie) {
-//                    LOG.warn("Could not close the properties output stream for file '" + fProperties.getAbsolutePath() + "'", ioe);
-//                }
-//            }
-//        }
-//    }
 }
