@@ -148,6 +148,9 @@
                     <source>${project.build.source}</source>
                     <target>${project.build.target}</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
+                    <compilerArgs>
+                        <compilerArg>-Xlint:unchecked</compilerArg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
         </plugins>
