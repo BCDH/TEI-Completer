@@ -20,6 +20,8 @@
 package org.humanistika.oxygen.tei.completer.remote.impl;
 
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
+import org.glassfish.jersey.client.filter.EncodingFilter;
+import org.glassfish.jersey.message.GZipEncoder;
 import org.glassfish.jersey.moxy.json.MoxyJsonConfig;
 import org.humanistika.ns.tei_completer.Suggestions;
 import org.humanistika.oxygen.tei.completer.configuration.beans.RequestInfo;
@@ -60,6 +62,8 @@ public class JerseyClient extends AbstractClient {
         final HttpAuthenticationFeature authFeature = HttpAuthenticationFeature.universalBuilder().build();
 //        final HttpAuthenticationFeature authFeature = HttpAuthenticationFeature.basicBuilder().build();
         this.client = client
+                .register(GZipEncoder.class)
+                .register(EncodingFilter.class)
                 .register(authFeature)
                 .register(createMoxyJsonResolver());
     }

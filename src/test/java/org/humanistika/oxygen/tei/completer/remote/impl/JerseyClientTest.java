@@ -20,6 +20,7 @@
 package org.humanistika.oxygen.tei.completer.remote.impl;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.glassfish.jersey.test.JerseyTest;
@@ -37,12 +38,15 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import javax.xml.bind.JAXB;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.attribute.UserPrincipal;
 import java.security.Principal;
+import java.util.zip.GZIPOutputStream;
 
 import static org.junit.Assert.assertEquals;
 
@@ -79,6 +83,47 @@ public class JerseyClientTest extends JerseyTest {
         @Produces({MediaType.APPLICATION_XML})
         public Suggestions getLemmaSelectionWithDependent_Xml(@PathParam("selection") final String selection, @PathParam("dependent") final String dependent) {
             return getTestSuggestions(selection, dependent);
+        }
+
+        /**
+         * Same as {@link MockServer#getLemmaSelection_Xml(String)} except the
+         * output is forcefully encoded as GZIP
+         */
+        @GET
+        @Path("getlemma/gzip/xml/{selection}")
+        public Response getLemmaSelection_Gzip_Xml(@PathParam("selection") final String selection) throws IOException {
+            try(final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+
+                try(final GZIPOutputStream gzos = new GZIPOutputStream(baos)) {
+                    JAXB.marshal(getTestSuggestions(selection, null), gzos);
+                }
+
+                return Response.status(Response.Status.OK)
+                        .entity(baos.toByteArray())
+                        .encoding("gzip")
+                        .build();
+            }
+        }
+
+        /**
+         * Same as {@link MockServer#getLemmaSelectionWithDependent_Xml(String, String)} except the
+         * output is forcefully encoded as GZIP
+         */
+        @GET
+        @Path("getlemma/gzip/xml/{selection}/{dependent}")
+        @Produces({MediaType.APPLICATION_XML})
+        public Response getLemmaSelectionWithDependent_Gzip_Xml(@PathParam("selection") final String selection, @PathParam("dependent") final String dependent) throws IOException {
+            try(final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+
+                try(final GZIPOutputStream gzos = new GZIPOutputStream(baos)) {
+                    JAXB.marshal( getTestSuggestions(selection, dependent), gzos);
+                }
+
+                return Response.status(Response.Status.OK)
+                        .entity(baos.toByteArray())
+                        .encoding("gzip")
+                        .build();
+            }
         }
 
         @GET
@@ -134,6 +179,32 @@ public class JerseyClientTest extends JerseyTest {
         final String dependent = "some-dependent";
 
         final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/xml/" + RequestInfo.UrlVar.SELECTION.var() + "/" + RequestInfo.UrlVar.DEPENDENT.var(), null, null);
+        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent);
+
+        final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
+
+        assertEquals(expectedSuggestions.getSuggestion(), suggestions.getSuggestion());
+    }
+
+    @Test
+    public void getLemmaSelection_Gzip_Xml() {
+        final String selection = "some-selection";
+        final String dependent = null;
+
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/gzip/xml/" + RequestInfo.UrlVar.SELECTION.var(), null, null);
+        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent);
+
+        final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
+
+        assertEquals(expectedSuggestions.getSuggestion(), suggestions.getSuggestion());
+    }
+
+    @Test
+    public void getLemmaSelectionDependent_Gzip_Xml() {
+        final String selection = "some-selection";
+        final String dependent = "some-dependent";
+
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/gzip/xml/" + RequestInfo.UrlVar.SELECTION.var() + "/" + RequestInfo.UrlVar.DEPENDENT.var(), null, null);
         final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent);
 
         final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
