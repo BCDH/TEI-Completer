@@ -115,7 +115,7 @@ public class TeiCompleter implements SchemaManagerFilter {
 
     //TODO(AR) need to also send in dependent
     private List<CIValue> requestAutoComplete(final AutoComplete autoComplete, final String selection, @Nullable final String dependent) {
-        final Suggestions suggestions = client.getSuggestions(autoComplete.getRequestInfo(), selection, dependent);
+        final Suggestions suggestions = client.getSuggestions(autoComplete.getRequestInfo(), selection, dependent, autoComplete.getResponseAction());
         final List<CIValue> results = new ArrayList<>();
         for(final Suggestion suggestion : suggestions.getSuggestion()) {
             results.add(new CIValue(suggestion.getValue(), suggestion.getDescription()));

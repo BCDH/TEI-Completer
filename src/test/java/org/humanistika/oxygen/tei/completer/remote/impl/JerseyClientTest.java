@@ -27,6 +27,7 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.humanistika.ns.tei_completer.Suggestion;
 import org.humanistika.ns.tei_completer.Suggestions;
 import org.humanistika.oxygen.tei.completer.configuration.beans.RequestInfo;
+import org.humanistika.oxygen.tei.completer.configuration.beans.ResponseAction;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -44,6 +45,8 @@ import javax.xml.bind.JAXB;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.nio.file.attribute.UserPrincipal;
 import java.security.Principal;
 import java.util.zip.GZIPOutputStream;
@@ -127,6 +130,23 @@ public class JerseyClientTest extends JerseyTest {
         }
 
         @GET
+        @Path("getlemma/custom/xml/{selection}")
+        @Produces({MediaType.APPLICATION_XML})
+        public String getLemmaSelection_Custom_Xml(@PathParam("selection") final String selection) {
+            return getTestSuggestions_CustomXml(selection, null);
+        }
+
+        @GET
+        @Path("getlemma/custom/xml/{selection}/{dependent}")
+        @Produces({MediaType.APPLICATION_XML})
+        public String getLemmaSelectionWithDependent_Custom_Xml(@PathParam("selection") final String selection, @PathParam("dependent") final String dependent) {
+            return getTestSuggestions_CustomXml(selection, dependent);
+        }
+
+
+        /* resources which produce JSON responses */
+
+        @GET
         @Path("getlemma/json/{selection}")
         @Produces({MediaType.APPLICATION_JSON})
         public Suggestions getLemmaSelection_Json(@PathParam("selection") final String selection) {
@@ -138,6 +158,20 @@ public class JerseyClientTest extends JerseyTest {
         @Produces({MediaType.APPLICATION_JSON})
         public Suggestions getLemmaSelectionWithDependent_Json(@PathParam("selection") final String selection, @PathParam("dependent") final String dependent) {
             return getTestSuggestions(selection, dependent);
+        }
+
+        @GET
+        @Path("getlemma/custom/json/{selection}")
+        @Produces({MediaType.APPLICATION_JSON})
+        public String getLemmaSelection_Custom_Json(@PathParam("selection") final String selection) {
+            return getTestSuggestions_CustomJson(selection, null);
+        }
+
+        @GET
+        @Path("getlemma/custom/json/{selection}/{dependent}")
+        @Produces({MediaType.APPLICATION_JSON})
+        public String getLemmaSelectionWithDependent_Custom_Json(@PathParam("selection") final String selection, @PathParam("dependent") final String dependent) {
+            return getTestSuggestions_CustomJson(selection, dependent);
         }
 
 
@@ -166,7 +200,7 @@ public class JerseyClientTest extends JerseyTest {
         final String dependent = null;
 
         final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/xml/" + RequestInfo.UrlVar.SELECTION.var(), null, null);
-        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent);
+        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, null);
 
         final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
 
@@ -179,7 +213,37 @@ public class JerseyClientTest extends JerseyTest {
         final String dependent = "some-dependent";
 
         final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/xml/" + RequestInfo.UrlVar.SELECTION.var() + "/" + RequestInfo.UrlVar.DEPENDENT.var(), null, null);
-        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent);
+        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, null);
+
+        final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
+
+        assertEquals(expectedSuggestions.getSuggestion(), suggestions.getSuggestion());
+    }
+
+    @Test
+    public void getLemmaSelection_Custom_Xml() throws URISyntaxException {
+        final String selection = "some-selection";
+        final String dependent = null;
+
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/custom/xml/" + RequestInfo.UrlVar.SELECTION.var(), null, null);
+        final java.nio.file.Path testTransform = Paths.get(getClass().getResource("custom-transform-test.xslt").toURI());
+        final ResponseAction responseAction = new ResponseAction(testTransform);
+        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, responseAction);
+
+        final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
+
+        assertEquals(expectedSuggestions.getSuggestion(), suggestions.getSuggestion());
+    }
+
+    @Test
+    public void getLemmaSelectionDependent_Custom_Xml() throws URISyntaxException {
+        final String selection = "some-selection";
+        final String dependent = "some-dependent";
+
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/custom/xml/" + RequestInfo.UrlVar.SELECTION.var() + "/" + RequestInfo.UrlVar.DEPENDENT.var(), null, null);
+        final java.nio.file.Path testTransform = Paths.get(getClass().getResource("custom-transform-test.xslt").toURI());
+        final ResponseAction responseAction = new ResponseAction(testTransform);
+        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, responseAction);
 
         final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
 
@@ -192,7 +256,7 @@ public class JerseyClientTest extends JerseyTest {
         final String dependent = null;
 
         final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/gzip/xml/" + RequestInfo.UrlVar.SELECTION.var(), null, null);
-        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent);
+        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, null);
 
         final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
 
@@ -205,7 +269,7 @@ public class JerseyClientTest extends JerseyTest {
         final String dependent = "some-dependent";
 
         final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/gzip/xml/" + RequestInfo.UrlVar.SELECTION.var() + "/" + RequestInfo.UrlVar.DEPENDENT.var(), null, null);
-        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent);
+        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, null);
 
         final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
 
@@ -218,7 +282,7 @@ public class JerseyClientTest extends JerseyTest {
         final String dependent = null;
 
         final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/json/" + RequestInfo.UrlVar.SELECTION.var(), null, null);
-        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent);
+        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, null);
 
         final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
 
@@ -231,7 +295,37 @@ public class JerseyClientTest extends JerseyTest {
         final String dependent = "some-dependent";
 
         final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/json/" + RequestInfo.UrlVar.SELECTION.var() + "/" + RequestInfo.UrlVar.DEPENDENT.var(), null, null);
-        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent);
+        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, null);
+
+        final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
+
+        assertEquals(expectedSuggestions.getSuggestion(), suggestions.getSuggestion());
+    }
+
+    @Test
+    public void getLemmaSelection_Custom_Json() throws URISyntaxException {
+        final String selection = "some-selection";
+        final String dependent = null;
+
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/custom/json/" + RequestInfo.UrlVar.SELECTION.var(), null, null);
+        final java.nio.file.Path testTransform = Paths.get(getClass().getResource("custom-transform-test.js").toURI());
+        final ResponseAction responseAction = new ResponseAction(testTransform);
+        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, responseAction);
+
+        final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
+
+        assertEquals(expectedSuggestions.getSuggestion(), suggestions.getSuggestion());
+    }
+
+    @Test
+    public void getLemmaSelectionDependent_Custom_Json() throws URISyntaxException {
+        final String selection = "some-selection";
+        final String dependent = "some-dependent";
+
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/custom/json/" + RequestInfo.UrlVar.SELECTION.var() + "/" + RequestInfo.UrlVar.DEPENDENT.var(), null, null);
+        final java.nio.file.Path testTransform = Paths.get(getClass().getResource("custom-transform-test.js").toURI());
+        final ResponseAction responseAction = new ResponseAction(testTransform);
+        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, responseAction);
 
         final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
 
@@ -245,7 +339,7 @@ public class JerseyClientTest extends JerseyTest {
         final String dependent = null;
 
         final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/secure/getlemma/xml/" + RequestInfo.UrlVar.SELECTION.var(), TEST_USERNAME, TEST_PASSWORD);
-        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent);
+        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, null);
 
         final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
 
@@ -259,7 +353,7 @@ public class JerseyClientTest extends JerseyTest {
         final String dependent = "some-dependent";
 
         final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/secure/getlemma/xml/" + RequestInfo.UrlVar.SELECTION.var() + "/" + RequestInfo.UrlVar.DEPENDENT.var(), TEST_USERNAME, TEST_PASSWORD);
-        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent);
+        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, null);
 
         final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
 
@@ -288,6 +382,39 @@ public class JerseyClientTest extends JerseyTest {
         suggestions.getSuggestion().add(suggestion2);
 
         return suggestions;
+    }
+
+    public static String getTestSuggestions_CustomXml(final String selection, @Nullable final String dependent) {
+        final String xml =
+                "<sgns>\n" +
+                "    <sgn>\n" +
+                "        <v>suggestion1</v>\n" +
+                "        <d>" + (dependent == null ? selection : (selection + ":" + dependent)) + "</d>\n" +
+                "    </sgn>\n" +
+                "    <sgn>\n" +
+                "        <v>suggestion2</v>\n" +
+                "        <d>" + (dependent == null ? selection : (selection + ":" + dependent)) + "</d>\n" +
+                "    </sgn>\n" +
+                "</sgns>";
+
+        return xml;
+    }
+
+    public static String getTestSuggestions_CustomJson(final String selection, @Nullable final String dependent) {
+        final String json =
+                "{\n" +
+                "    \"sgns\": [\n" +
+                "        {\n" +
+                "            \"v\" : \"suggestion1\",\n" +
+                "            \"d\" : \"" + (dependent == null ? selection : (selection + ":" + dependent)) + "\"\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"v\" : \"suggestion2\",\n" +
+                "            \"d\" : \"" + (dependent == null ? selection : (selection + ":" + dependent)) + "\"\n" +
+                "        }\n" +
+                "    ]\n" +
+                "}";
+        return json;
     }
 
     /* supporting classes below for security based tests */

@@ -17,31 +17,28 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-package org.humanistika.oxygen.tei.completer.remote;
+package org.humanistika.oxygen.tei.completer.response;
 
-import org.humanistika.ns.tei_completer.Suggestions;
-import org.humanistika.oxygen.tei.completer.configuration.beans.RequestInfo;
-import org.humanistika.oxygen.tei.completer.configuration.beans.ResponseAction;
-import org.jetbrains.annotations.Nullable;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Path;
 
 /**
- * TEI Completer Client interface for getting auto-complete suggestions from a remote server
+ * Transforms a Response from the Server
  *
  * @author Adam Retter, Evolved Binary Ltd <adam.retter@googlemail.com>
  * @version 1.0
- * @serial 20160126
+ * @serial 2016028
  */
-public interface Client {
+public interface ResponseTransformer {
 
     /**
-     * Retrieve the suggestions for auto-complete from the server
+     * Transform the content using the transformation
      *
-     * @param requestInfo The base details for the request
-     * @param selection The selection
-     * @param dependent The dependent or null
-     * @param responseAction An optional action to take upon the response, or otherwise null
-     *
-     * @return A list of auto-complete suggestions from the server
+     * @param content The content to transform
+     * @param transformation The transformation to apply to the content
+     * @return The transformed content
      */
-    Suggestions getSuggestions(final RequestInfo requestInfo, final String selection, final String dependent, @Nullable final ResponseAction responseAction);
+    void transform(final InputStream content, final Path transformation, final OutputStream result) throws IOException, TransformationException;
 }

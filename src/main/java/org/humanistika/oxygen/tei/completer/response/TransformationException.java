@@ -17,31 +17,23 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-package org.humanistika.oxygen.tei.completer.remote;
-
-import org.humanistika.ns.tei_completer.Suggestions;
-import org.humanistika.oxygen.tei.completer.configuration.beans.RequestInfo;
-import org.humanistika.oxygen.tei.completer.configuration.beans.ResponseAction;
-import org.jetbrains.annotations.Nullable;
+package org.humanistika.oxygen.tei.completer.response;
 
 /**
- * TEI Completer Client interface for getting auto-complete suggestions from a remote server
- *
  * @author Adam Retter, Evolved Binary Ltd <adam.retter@googlemail.com>
  * @version 1.0
- * @serial 20160126
+ * @serial 2016028
  */
-public interface Client {
+public class TransformationException extends Exception {
+    public TransformationException(final Throwable t) {
+        super(t);
+    }
 
-    /**
-     * Retrieve the suggestions for auto-complete from the server
-     *
-     * @param requestInfo The base details for the request
-     * @param selection The selection
-     * @param dependent The dependent or null
-     * @param responseAction An optional action to take upon the response, or otherwise null
-     *
-     * @return A list of auto-complete suggestions from the server
-     */
-    Suggestions getSuggestions(final RequestInfo requestInfo, final String selection, final String dependent, @Nullable final ResponseAction responseAction);
+    public TransformationException(final String message) {
+        super(message);
+    }
+
+    public TransformationException(final String message, final Throwable t) {
+        super(message, t);
+    }
 }
