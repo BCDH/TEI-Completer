@@ -76,7 +76,7 @@ public class ConfigurationFactory {
         if(platform != null && platform.startsWith("WIN")) {
             final Path appData = Paths.get(userHome,  WIN32_USER_APPLICATION_DATA_FOLDER_NAME);
             if(!(Files.exists(appData) && Files.isWritable(appData))) {
-                LOGGER.error("Windows Application Data folder is not accessible: " + appData.toAbsolutePath());
+                LOGGER.error("Windows Application Data folder is not accessible: {}", appData.toAbsolutePath());
             }
             configDir = appData.resolve(CONFIG_FOLDER_NAME);
         } else {

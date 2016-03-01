@@ -78,7 +78,7 @@ public class XmlConfiguration implements Configuration {
     @Nullable
     private List<AutoComplete> loadAutoCompletes() {
         if(Files.notExists(configFile)) {
-            LOGGER.error("Configuration file does not exist: " + configFile.toAbsolutePath());
+            LOGGER.error("Configuration file does not exist: {}", configFile.toAbsolutePath());
             return null;
         }
 
@@ -146,7 +146,7 @@ public class XmlConfiguration implements Configuration {
         } else if(global != null) {
             baseUrl = global.getBaseUrl();
         } else {
-            LOGGER.warn("No base URL specified for auto-complete: " + index);
+            LOGGER.warn("No base URL specified for auto-complete: {}", index);
             baseUrl = "";
         }
 

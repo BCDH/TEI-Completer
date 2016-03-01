@@ -119,14 +119,17 @@ public class JerseyClient extends AbstractClient {
                 final Response response = requestBuilder.get();
                 try(final InputStream is = response.readEntity(InputStream.class)) {
                     final MediaType mediaType = response.getMediaType();
+                    final Path transformation = responseAction.getTransformation();
                     if (mediaType != null && mediaType.isCompatible(MediaType.APPLICATION_XML_TYPE)) {
                         //custom XML response
-                        return transformXmlResponse(is, responseAction.getTransformation());
+                        LOGGER.debug("Transforming XML response from: {} using: {}", url, transformation);
+                        return transformXmlResponse(is, transformation);
                     } else if (mediaType != null && mediaType.equals(MediaType.APPLICATION_JSON_TYPE)) {
+                        LOGGER.debug("Transforming JSON response from: {} using: {}", url, transformation);
                         //custom JSON response
-                        return transformJsonResponse(is, responseAction.getTransformation());
+                        return transformJsonResponse(is, transformation);
                     } else {
-                        LOGGER.error("Response has unsupported Content-Type: " + mediaType); //TODO(AR) maybe something more visible to the user
+                        LOGGER.error("Response from {} has unsupported Content-Type: {}", url, mediaType); //TODO(AR) maybe something more visible to the user
                         return new Suggestions();
                     }
                 }

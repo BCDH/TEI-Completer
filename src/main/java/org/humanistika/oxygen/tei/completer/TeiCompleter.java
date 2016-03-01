@@ -105,7 +105,7 @@ public class TeiCompleter implements SchemaManagerFilter {
                         list.addAll(suggestions);
                         break; //TODO(AR) should we consider all options?
                     } else {
-                        LOGGER.debug("Attribute XPath '" + attrXPath + "' is not a subset of configured auto-complete XPath '" + getAutoCompleteAttributeXPath(autoComplete) + "'");
+                        LOGGER.debug("Attribute XPath '{}' is not a subset of configured auto-complete XPath '{}'", attrXPath, getAutoCompleteAttributeXPath(autoComplete));
                     }
                 }
             }
@@ -170,14 +170,14 @@ public class TeiCompleter implements SchemaManagerFilter {
             }
         }
 
-        LOGGER.error("Invalid config detected for autoComplete, path must be absolute, will skip. context='" + autoComplete.getContext() + "' attribute='" + autoComplete.getAttribute() + "' attributeExpr=" + attributeExpr);
+        LOGGER.error("Invalid config detected for autoComplete, path must be absolute, will skip. context='{}' attribute='{}' attributeExpr={}", autoComplete.getContext(), autoComplete.getAttribute(), attributeExpr);
         return null;
     }
 
     private String getSelection(final Context context, final String elemXPath, final AutoComplete autoComplete) {
         //get the selection by evaluating an XPath
         final String selectionXPath = getAutoCompleteSelectionXPath(elemXPath, autoComplete);
-        LOGGER.info("Using selection XPath: " + selectionXPath);
+        LOGGER.info("Using selection XPath: {}", selectionXPath);
         final List results = context.executeXPath(selectionXPath, null, true);
 
         if(results.size() > 0 && results.get(0) instanceof Node) {
@@ -188,7 +188,7 @@ public class TeiCompleter implements SchemaManagerFilter {
             }
             return builder.toString();
         } else {
-            LOGGER.error("Could not find selection from XPath: " + selectionXPath);
+            LOGGER.error("Could not find selection from XPath: {}", selectionXPath);
             return "";
         }
     }
@@ -197,7 +197,7 @@ public class TeiCompleter implements SchemaManagerFilter {
     private String getDependent(final Context context, final String elemXPath, final Dependent dependent) {
         //get the dependent by evaluating an XPath
         final String selectionXPath = getAutoCompleteDependentXPath(elemXPath, dependent);
-        LOGGER.info("Using dependent XPath: " + selectionXPath);
+        LOGGER.info("Using dependent XPath: {}", selectionXPath);
         final List results = context.executeXPath(selectionXPath, null, true);
 
         final StringBuilder builder = new StringBuilder();
@@ -214,10 +214,10 @@ public class TeiCompleter implements SchemaManagerFilter {
             return dependentStr;
         } else {
             if(dependent.getDefault() != null) {
-                LOGGER.error("Could not find dependent from XPath: " + selectionXPath + " Using default value: " + dependent.getDefault());
+                LOGGER.error("Could not find dependent from XPath: {}. Using default value: {}", selectionXPath, dependent.getDefault());
                 return dependent.getDefault();
             } else {
-                LOGGER.warn("Could not find dependent from XPath: " + selectionXPath);
+                LOGGER.warn("Could not find dependent from XPath: {}", selectionXPath);
                 return null;
             }
         }
