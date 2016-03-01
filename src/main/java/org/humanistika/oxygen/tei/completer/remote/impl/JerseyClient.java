@@ -103,7 +103,7 @@ public class JerseyClient extends AbstractClient {
                     .target(url.getProtocol() + "://" + url.getAuthority())
                     .path(url.getPath())
                     .request()
-                    .accept(MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON);
+                    .accept(MediaType.APPLICATION_XML, MediaType.TEXT_XML, MediaType.APPLICATION_JSON);
 
             if(requestInfo.getUsername() != null) {
                 requestBuilder = requestBuilder
@@ -120,11 +120,12 @@ public class JerseyClient extends AbstractClient {
                 try(final InputStream is = response.readEntity(InputStream.class)) {
                     final MediaType mediaType = response.getMediaType();
                     final Path transformation = responseAction.getTransformation();
-                    if (mediaType != null && mediaType.isCompatible(MediaType.APPLICATION_XML_TYPE)) {
+                    if (mediaType != null && mediaType.isCompatible(MediaType.APPLICATION_XML_TYPE)
+                            || mediaType.isCompatible(MediaType.TEXT_XML_TYPE)) {
                         //custom XML response
                         LOGGER.debug("Transforming XML response from: {} using: {}", url, transformation);
                         return transformXmlResponse(is, transformation);
-                    } else if (mediaType != null && mediaType.equals(MediaType.APPLICATION_JSON_TYPE)) {
+                    } else if (mediaType != null && mediaType.isCompatible(MediaType.APPLICATION_JSON_TYPE)) {
                         LOGGER.debug("Transforming JSON response from: {} using: {}", url, transformation);
                         //custom JSON response
                         return transformJsonResponse(is, transformation);

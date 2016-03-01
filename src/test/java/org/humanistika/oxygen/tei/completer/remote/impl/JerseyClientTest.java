@@ -88,6 +88,20 @@ public class JerseyClientTest extends JerseyTest {
             return getTestSuggestions(selection, dependent);
         }
 
+        @GET
+        @Path("getlemma/text-xml/{selection}")
+        @Produces({MediaType.TEXT_XML})
+        public Suggestions getLemmaSelection_TextXml(@PathParam("selection") final String selection) {
+            return getTestSuggestions(selection, null);
+        }
+
+        @GET
+        @Path("getlemma/text-xml/{selection}/{dependent}")
+        @Produces({MediaType.TEXT_XML})
+        public Suggestions getLemmaSelectionWithDependent_TextXml(@PathParam("selection") final String selection, @PathParam("dependent") final String dependent) {
+            return getTestSuggestions(selection, dependent);
+        }
+
         /**
          * Same as {@link MockServer#getLemmaSelection_Xml(String)} except the
          * output is forcefully encoded as GZIP
@@ -140,6 +154,20 @@ public class JerseyClientTest extends JerseyTest {
         @Path("getlemma/custom/xml/{selection}/{dependent}")
         @Produces({MediaType.APPLICATION_XML})
         public String getLemmaSelectionWithDependent_Custom_Xml(@PathParam("selection") final String selection, @PathParam("dependent") final String dependent) {
+            return getTestSuggestions_CustomXml(selection, dependent);
+        }
+
+        @GET
+        @Path("getlemma/custom/text-xml/{selection}")
+        @Produces({MediaType.TEXT_XML})
+        public String getLemmaSelection_Custom_TextXml(@PathParam("selection") final String selection) {
+            return getTestSuggestions_CustomXml(selection, null);
+        }
+
+        @GET
+        @Path("getlemma/custom/text-xml/{selection}/{dependent}")
+        @Produces({MediaType.TEXT_XML})
+        public String getLemmaSelectionWithDependent_Custom_TextXml(@PathParam("selection") final String selection, @PathParam("dependent") final String dependent) {
             return getTestSuggestions_CustomXml(selection, dependent);
         }
 
@@ -221,6 +249,32 @@ public class JerseyClientTest extends JerseyTest {
     }
 
     @Test
+    public void getLemmaSelection_TextXml() {
+        final String selection = "some-selection";
+        final String dependent = null;
+
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/text-xml/" + RequestInfo.UrlVar.SELECTION.var(), null, null);
+        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, null);
+
+        final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
+
+        assertEquals(expectedSuggestions.getSuggestion(), suggestions.getSuggestion());
+    }
+
+    @Test
+    public void getLemmaSelectionDependent_TextXml() {
+        final String selection = "some-selection";
+        final String dependent = "some-dependent";
+
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/text-xml/" + RequestInfo.UrlVar.SELECTION.var() + "/" + RequestInfo.UrlVar.DEPENDENT.var(), null, null);
+        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, null);
+
+        final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
+
+        assertEquals(expectedSuggestions.getSuggestion(), suggestions.getSuggestion());
+    }
+
+    @Test
     public void getLemmaSelection_Custom_Xml() throws URISyntaxException {
         final String selection = "some-selection";
         final String dependent = null;
@@ -241,6 +295,36 @@ public class JerseyClientTest extends JerseyTest {
         final String dependent = "some-dependent";
 
         final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/custom/xml/" + RequestInfo.UrlVar.SELECTION.var() + "/" + RequestInfo.UrlVar.DEPENDENT.var(), null, null);
+        final java.nio.file.Path testTransform = Paths.get(getClass().getResource("custom-transform-test.xslt").toURI());
+        final ResponseAction responseAction = new ResponseAction(testTransform);
+        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, responseAction);
+
+        final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
+
+        assertEquals(expectedSuggestions.getSuggestion(), suggestions.getSuggestion());
+    }
+
+    @Test
+    public void getLemmaSelection_Custom_TextXml() throws URISyntaxException {
+        final String selection = "some-selection";
+        final String dependent = null;
+
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/custom/text-xml/" + RequestInfo.UrlVar.SELECTION.var(), null, null);
+        final java.nio.file.Path testTransform = Paths.get(getClass().getResource("custom-transform-test.xslt").toURI());
+        final ResponseAction responseAction = new ResponseAction(testTransform);
+        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, responseAction);
+
+        final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
+
+        assertEquals(expectedSuggestions.getSuggestion(), suggestions.getSuggestion());
+    }
+
+    @Test
+    public void getLemmaSelectionDependent_Custom_TextXml() throws URISyntaxException {
+        final String selection = "some-selection";
+        final String dependent = "some-dependent";
+
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/custom/text-xml/" + RequestInfo.UrlVar.SELECTION.var() + "/" + RequestInfo.UrlVar.DEPENDENT.var(), null, null);
         final java.nio.file.Path testTransform = Paths.get(getClass().getResource("custom-transform-test.xslt").toURI());
         final ResponseAction responseAction = new ResponseAction(testTransform);
         final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, responseAction);
