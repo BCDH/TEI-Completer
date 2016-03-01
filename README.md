@@ -78,7 +78,7 @@ which also considers the value of the dependent attribute `//w/@ana` value, woul
 </config>
 ```
 
-
+If you wish to use a response transformation, these must be written in either XSLT (1.0 or 2.0) or JavaScript (<=1.7). The transformation file must be resolved relative to `config.xml`, that is to say that you should place your transforms in the same folder as `config.xml` (see above). See the [Response Transformations](#response-transformations) section for further details.
 
 ***NOTE*** Changes to the configuration require restarting Oxygen to be detected.
 
@@ -88,6 +88,8 @@ which also considers the value of the dependent attribute `//w/@ana` value, woul
 Servers are expected to respond to the plugin using an XML or JSON document, which contains the suggestions for
 auto-completion. The XML format is documented in [suggestions.xsd](https://raw.githubusercontent.com/BCDH/TEI-Completer/master/src/main/resources/suggestions.xsd).
 The JSON format is a direct conversion of the XML format.
+
+However, if your server already has a fixed format, you may use a [Response Transformation](#response-transformations) to transform the response from your server to that shown below.
 
 
 * Example of the XML format:
@@ -122,6 +124,62 @@ The JSON format is a direct conversion of the XML format.
     ]
 }
 ```
+
+
+# Response Transformations
+
+If your server does not or cannot return data in either the XML or JSON format described in the [Server Messages](#server-messages) section, then you can create a Response Transformation file to convert the format of the data supplied by your server to that required by the TEI-Completer.
+
+Each Response Transformation file must be listed in the [config.xml](#configuring).
+
+## XML Transformation
+
+If your server provides data in an XML format, then you may use either XSLT 1.0 or XSLT 2.0 to transform that response. The entire XML document from your server will be provided to the XSLT stylesheet as the default context item. Your XSLT transformation must return a single XML document in the format required by the TEI-Completer.
+
+## JSON Transformation
+
+If your server provides data in a JSON format, then you may use JavaScript (<= 1.7) to transform that response. You must implement a JavaScript function named `transform`. The `transform` function must accept a single argument which is the JSON object from your server, and must subsequently return a JSON object in the format required by the TEI-Completer.
+
+### Example JSON transformation
+
+If for example your server was to provide JSON data in the following format:
+```javascript
+{
+    "sgns": [
+        {
+            "v": "suggestion1",
+            "d": "A description of suggestion 1"
+        },
+        {
+            "v": "suggestion2",
+            "d": "A description of suggestion 2"
+        }
+    ]
+}
+```
+
+Then an appropriate JavaScript `transform` function might look something like:
+```javascript
+function transform(content) {
+    var suggestion = [];
+
+    for(var i = 0; i < content.sgns.length; i++) {
+        suggestion.push(
+            {
+                "tc:value" : content.sgns[i].v,
+                "tc:description" : content.sgns[i].d
+            }
+        )
+    }
+
+    var suggestions = {
+        "tc:suggestion": suggestion
+    }
+
+    return suggestions;
+}
+```
+
 
 
 # Building from Source Code
