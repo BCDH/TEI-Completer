@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ContextResolver;
@@ -47,6 +48,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 import java.io.*;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -99,9 +101,9 @@ public class JerseyClient extends AbstractClient {
     public Suggestions getSuggestions(final RequestInfo requestInfo, final String selection, final String dependent, @Nullable final ResponseAction responseAction) {
         try {
             final URL url = getUrl(requestInfo, selection, dependent);
+
             Invocation.Builder requestBuilder = client
-                    .target(url.getProtocol() + "://" + url.getAuthority())
-                    .path(url.getPath())
+                    .target(url.toURI())
                     .request()
                     .accept(MediaType.APPLICATION_XML, MediaType.TEXT_XML, MediaType.APPLICATION_JSON);
 
@@ -135,7 +137,7 @@ public class JerseyClient extends AbstractClient {
                     }
                 }
             }
-        } catch(final IOException | TransformationException e) {
+        } catch(final URISyntaxException | IOException | TransformationException e) {
             LOGGER.error(e.getMessage(), e); //TODO(AR) maybe something more visible to the user
             return new Suggestions();
         }

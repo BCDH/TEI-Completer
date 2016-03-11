@@ -89,6 +89,13 @@ public class JerseyClientTest extends JerseyTest {
         }
 
         @GET
+        @Path("getlemma/xml_qs")
+        @Produces({MediaType.APPLICATION_XML})
+        public Suggestions getLemmaSelectionWithDependent_Xml_queryString(@QueryParam("selection") final String selection, @Nullable @QueryParam("dependent") final String dependent) {
+            return getTestSuggestions(selection, dependent);
+        }
+
+        @GET
         @Path("getlemma/text-xml/{selection}")
         @Produces({MediaType.TEXT_XML})
         public Suggestions getLemmaSelection_TextXml(@PathParam("selection") final String selection) {
@@ -241,6 +248,32 @@ public class JerseyClientTest extends JerseyTest {
         final String dependent = "some-dependent";
 
         final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/xml/" + RequestInfo.UrlVar.SELECTION.var() + "/" + RequestInfo.UrlVar.DEPENDENT.var(), null, null);
+        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, null);
+
+        final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
+
+        assertEquals(expectedSuggestions.getSuggestion(), suggestions.getSuggestion());
+    }
+
+    @Test
+    public void getLemmaSelection_Xml_queryString() {
+        final String selection = "some-selection";
+        final String dependent = null;
+
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/xml_qs?" + RequestInfo.UrlVar.SELECTION.name().toLowerCase() + "=" + RequestInfo.UrlVar.SELECTION.var(), null, null);
+        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, null);
+
+        final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
+
+        assertEquals(expectedSuggestions.getSuggestion(), suggestions.getSuggestion());
+    }
+
+    @Test
+    public void getLemmaSelectionDependent_Xml_queryString() {
+        final String selection = "some-selection";
+        final String dependent = "some-dependent";
+
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/xml_qs?" + RequestInfo.UrlVar.SELECTION.name().toLowerCase() + "=" + RequestInfo.UrlVar.SELECTION.var() + "&" + RequestInfo.UrlVar.DEPENDENT.name().toLowerCase() + "=" + RequestInfo.UrlVar.DEPENDENT.var(), null, null);
         final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, null);
 
         final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
