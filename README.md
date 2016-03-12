@@ -1,6 +1,6 @@
 # TEI Completer
 
-The TEI Completer is a highly customizable plugin for setting up and activating remote-driven attribute-value completions in the oXygen XML Editor. 
+The TEI Completer is a highly customizable plugin for setting up and activating remote-driven attribute-value autocompletions in the oXygen XML Editor. 
 
 We use it in a variety of contexts ranging from morphosyntactic annotation and standardization of historical spellings, to linking words with particular dictionary senses and reference strings with entries in authority files. 
 
@@ -8,7 +8,7 @@ While we developed the TEI Completer for very specific use cases in our own proj
 
 The plugin has been developed at the Belgrade Center for Digital Humanities under the motto "TEI, You... complete me."
 
-![alt text](doc/images/combo.png?raw="true" "Oxygen Document Type Associations")
+![alt text](doc/images/combo.png?raw="true" "TEI Completer in action")
 
 # Installation
 
@@ -216,6 +216,6 @@ This tool has been developed in the context of two ongoing BCDH projects: *Rasko
 
 ---
 
-![alt text](doc/images/sense.png?raw="true" "Oxygen Document Type Associations")
+![alt text](doc/images/sense.png?raw="true" "TEI Completer in action")
 
 ---
