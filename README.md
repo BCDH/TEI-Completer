@@ -1,4 +1,5 @@
 # TEI Completer
+[![Build Status](https://travis-ci.org/BCDH/TEI-Completer.png?branch=master)](https://travis-ci.org/BCDH/TEI-Completer)
 
 The TEI Completer is a highly customizable plugin for setting up and activating remote-driven autocompletions of attribute values in the oXygen XML Editor. 
 
