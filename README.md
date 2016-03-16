@@ -9,7 +9,7 @@ While we developed the TEI Completer for very specific use cases in our own proj
 
 The plugin has been developed at the [Belgrade Center for Digital Humanities](http://www.humanistika.org/) under the motto "*TEI, You... complete me.*"
 
-![alt text](doc/images/combo.png?raw="true" "TEI Completer in action")
+![alt text](https://raw.githubusercontent.com/BCDH/TEI-Completer/master/doc/images/combo.jpg "TEI Completer in action")
 
 # Installation
 
