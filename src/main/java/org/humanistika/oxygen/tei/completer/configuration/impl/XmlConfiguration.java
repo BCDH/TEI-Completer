@@ -24,10 +24,7 @@ import org.humanistika.ns.tei_completer.NamespaceBindings;
 import org.humanistika.ns.tei_completer.Request;
 import org.humanistika.ns.tei_completer.Server;
 import org.humanistika.oxygen.tei.completer.configuration.Configuration;
-import org.humanistika.oxygen.tei.completer.configuration.beans.AutoComplete;
-import org.humanistika.oxygen.tei.completer.configuration.beans.Dependent;
-import org.humanistika.oxygen.tei.completer.configuration.beans.RequestInfo;
-import org.humanistika.oxygen.tei.completer.configuration.beans.ResponseAction;
+import org.humanistika.oxygen.tei.completer.configuration.beans.*;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +32,6 @@ import org.slf4j.LoggerFactory;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -93,7 +89,7 @@ public class XmlConfiguration implements Configuration {
         }
     }
 
-    private final List<AutoComplete> expandConfig(final Config config) {
+    private List<AutoComplete> expandConfig(final Config config) {
         final List<AutoComplete> autoCompletes = new ArrayList<>();
         for(int i = 0; i <  config.getAutoComplete().size(); i++) {
             final org.humanistika.ns.tei_completer.AutoComplete autoComplete  = config.getAutoComplete().get(i);
@@ -109,13 +105,11 @@ public class XmlConfiguration implements Configuration {
                 );
             }
 
-            final String username = resolveUsername(config.getServer(), autoComplete.getRequest().getServer());
-            final String password = resolvePassword(config.getServer(), autoComplete.getRequest().getServer());
+            final Authentication authentication = resolveAuthentication(config.getServer(), autoComplete.getRequest().getServer());
 
             final RequestInfo requestInfo = new RequestInfo(
-                    expandUrl(config.getServer(), autoComplete.getRequest(), i+1, username, password),
-                    username,
-                    password
+                    expandUrl(config.getServer(), autoComplete.getRequest(), i+1, authentication),
+                    authentication
             );
 
             final ResponseAction responseAction;
@@ -139,7 +133,7 @@ public class XmlConfiguration implements Configuration {
         return autoCompletes;
     }
 
-    private String expandUrl(final Server global, final Request specific, final int index, final String username, final String password) {
+    private String expandUrl(final Server global, final Request specific, final int index, final Authentication authentication) {
         final String baseUrl;
         if(specific.getServer() != null) {
             baseUrl = specific.getServer().getBaseUrl();
@@ -152,32 +146,48 @@ public class XmlConfiguration implements Configuration {
 
         String url = specific.getUrl();
         url = url.replace(BASE_URL.var(), baseUrl);
-        if(username != null) {
-            url = url.replace(USERNAME.var(), username);
-        }
-        if(password != null) {
-            url = url.replace(PASSWORD.var(), password);
+        if(authentication != null) {
+            url = url.replace(USERNAME.var(), authentication.getUsername());
+            url = url.replace(PASSWORD.var(), authentication.getPassword());
         }
         return url;
     }
 
     @Nullable
-    private String resolveUsername(final Server global, final Server specific) {
+    private Authentication resolveAuthentication(final Server global, final Server specific) {
+        final org.humanistika.ns.tei_completer.Authentication configAuth;
         if(specific != null) {
-            return specific.getUsername();
+            configAuth = specific.getAuthentication();
         } else if(global != null) {
-            return global.getUsername();
+            configAuth = global.getAuthentication();
         } else {
-            return null;
+            configAuth = null;
         }
-    }
 
-    @Nullable
-    private String resolvePassword(final Server global, final Server specific) {
-        if(specific != null) {
-            return specific.getUsername();
-        } else if(global != null) {
-            return global.getUsername();
+        if(configAuth != null) {
+            final Authentication.AuthenticationType authenticationType;
+            switch(configAuth.getType()) {
+                case PREEMPTIVE_BASIC:
+                    authenticationType = Authentication.AuthenticationType.PREEMPTIVE_BASIC;
+                    break;
+
+                case BASIC:
+                    authenticationType = Authentication.AuthenticationType.NON_PREEMPTIVE_BASIC;
+                    break;
+
+                case DIGEST:
+                    authenticationType = Authentication.AuthenticationType.DIGEST;
+                    break;
+
+                case BASIC_DIGEST:
+                    authenticationType = Authentication.AuthenticationType.NON_PREEMPTIVE_BASIC_DIGEST;
+                    break;
+
+                default:
+                    throw new IllegalStateException("Unknown authentication type: " + configAuth.getType());
+            }
+
+            return new Authentication(authenticationType, configAuth.getUsername(), configAuth.getPassword());
         } else {
             return null;
         }

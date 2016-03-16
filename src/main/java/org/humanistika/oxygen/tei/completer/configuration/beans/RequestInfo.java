@@ -54,15 +54,12 @@ public class RequestInfo {
         }
     }
 
-
     private final String url;
-    @Nullable private final String username;
-    @Nullable private final String password;
+    @Nullable private final Authentication authentication;
 
-    public RequestInfo(final String url, final String username, final String password) {
+    public RequestInfo(final String url, final Authentication authentication) {
         this.url = url;
-        this.username = username;
-        this.password = password;
+        this.authentication = authentication;
     }
 
     public URL getUrl(final Map<UrlVar, String> substitutions) throws MalformedURLException {
@@ -76,12 +73,7 @@ public class RequestInfo {
     }
 
     @Nullable
-    public String getUsername() {
-        return username;
-    }
-
-    @Nullable
-    public String getPassword() {
-        return password;
+    public Authentication getAuthentication() {
+        return authentication;
     }
 }

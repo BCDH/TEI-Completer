@@ -26,8 +26,10 @@ import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.glassfish.jersey.test.JerseyTest;
 import org.humanistika.ns.tei_completer.Suggestion;
 import org.humanistika.ns.tei_completer.Suggestions;
+import org.humanistika.oxygen.tei.completer.configuration.beans.Authentication;
 import org.humanistika.oxygen.tei.completer.configuration.beans.RequestInfo;
 import org.humanistika.oxygen.tei.completer.configuration.beans.ResponseAction;
+import org.humanistika.oxygen.tei.completer.remote.ClientFactory.AuthenticationType;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -234,8 +236,8 @@ public class JerseyClientTest extends JerseyTest {
         final String selection = "some-selection";
         final String dependent = null;
 
-        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/xml/" + RequestInfo.UrlVar.SELECTION.var(), null, null);
-        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, null);
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/xml/" + RequestInfo.UrlVar.SELECTION.var(), null);
+        final Suggestions suggestions = new JerseyClient(AuthenticationType.NONE, client()).getSuggestions(requestInfo, selection, dependent, null);
 
         final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
 
@@ -247,8 +249,8 @@ public class JerseyClientTest extends JerseyTest {
         final String selection = "some-selection";
         final String dependent = "some-dependent";
 
-        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/xml/" + RequestInfo.UrlVar.SELECTION.var() + "/" + RequestInfo.UrlVar.DEPENDENT.var(), null, null);
-        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, null);
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/xml/" + RequestInfo.UrlVar.SELECTION.var() + "/" + RequestInfo.UrlVar.DEPENDENT.var(), null);
+        final Suggestions suggestions = new JerseyClient(AuthenticationType.NONE, client()).getSuggestions(requestInfo, selection, dependent, null);
 
         final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
 
@@ -260,8 +262,8 @@ public class JerseyClientTest extends JerseyTest {
         final String selection = "some-selection";
         final String dependent = null;
 
-        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/xml_qs?" + RequestInfo.UrlVar.SELECTION.name().toLowerCase() + "=" + RequestInfo.UrlVar.SELECTION.var(), null, null);
-        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, null);
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/xml_qs?" + RequestInfo.UrlVar.SELECTION.name().toLowerCase() + "=" + RequestInfo.UrlVar.SELECTION.var(), null);
+        final Suggestions suggestions = new JerseyClient(AuthenticationType.NONE, client()).getSuggestions(requestInfo, selection, dependent, null);
 
         final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
 
@@ -273,8 +275,8 @@ public class JerseyClientTest extends JerseyTest {
         final String selection = "some-selection";
         final String dependent = "some-dependent";
 
-        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/xml_qs?" + RequestInfo.UrlVar.SELECTION.name().toLowerCase() + "=" + RequestInfo.UrlVar.SELECTION.var() + "&" + RequestInfo.UrlVar.DEPENDENT.name().toLowerCase() + "=" + RequestInfo.UrlVar.DEPENDENT.var(), null, null);
-        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, null);
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/xml_qs?" + RequestInfo.UrlVar.SELECTION.name().toLowerCase() + "=" + RequestInfo.UrlVar.SELECTION.var() + "&" + RequestInfo.UrlVar.DEPENDENT.name().toLowerCase() + "=" + RequestInfo.UrlVar.DEPENDENT.var(), null);
+        final Suggestions suggestions = new JerseyClient(AuthenticationType.NONE, client()).getSuggestions(requestInfo, selection, dependent, null);
 
         final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
 
@@ -286,8 +288,8 @@ public class JerseyClientTest extends JerseyTest {
         final String selection = "some-selection";
         final String dependent = null;
 
-        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/text-xml/" + RequestInfo.UrlVar.SELECTION.var(), null, null);
-        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, null);
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/text-xml/" + RequestInfo.UrlVar.SELECTION.var(), null);
+        final Suggestions suggestions = new JerseyClient(AuthenticationType.NONE, client()).getSuggestions(requestInfo, selection, dependent, null);
 
         final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
 
@@ -299,8 +301,8 @@ public class JerseyClientTest extends JerseyTest {
         final String selection = "some-selection";
         final String dependent = "some-dependent";
 
-        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/text-xml/" + RequestInfo.UrlVar.SELECTION.var() + "/" + RequestInfo.UrlVar.DEPENDENT.var(), null, null);
-        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, null);
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/text-xml/" + RequestInfo.UrlVar.SELECTION.var() + "/" + RequestInfo.UrlVar.DEPENDENT.var(), null);
+        final Suggestions suggestions = new JerseyClient(AuthenticationType.NONE, client()).getSuggestions(requestInfo, selection, dependent, null);
 
         final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
 
@@ -312,10 +314,10 @@ public class JerseyClientTest extends JerseyTest {
         final String selection = "some-selection";
         final String dependent = null;
 
-        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/custom/xml/" + RequestInfo.UrlVar.SELECTION.var(), null, null);
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/custom/xml/" + RequestInfo.UrlVar.SELECTION.var(), null);
         final java.nio.file.Path testTransform = Paths.get(getClass().getResource("custom-transform-test.xslt").toURI());
         final ResponseAction responseAction = new ResponseAction(testTransform);
-        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, responseAction);
+        final Suggestions suggestions = new JerseyClient(AuthenticationType.NONE, client()).getSuggestions(requestInfo, selection, dependent, responseAction);
 
         final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
 
@@ -327,10 +329,10 @@ public class JerseyClientTest extends JerseyTest {
         final String selection = "some-selection";
         final String dependent = "some-dependent";
 
-        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/custom/xml/" + RequestInfo.UrlVar.SELECTION.var() + "/" + RequestInfo.UrlVar.DEPENDENT.var(), null, null);
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/custom/xml/" + RequestInfo.UrlVar.SELECTION.var() + "/" + RequestInfo.UrlVar.DEPENDENT.var(), null);
         final java.nio.file.Path testTransform = Paths.get(getClass().getResource("custom-transform-test.xslt").toURI());
         final ResponseAction responseAction = new ResponseAction(testTransform);
-        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, responseAction);
+        final Suggestions suggestions = new JerseyClient(AuthenticationType.NONE, client()).getSuggestions(requestInfo, selection, dependent, responseAction);
 
         final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
 
@@ -342,10 +344,10 @@ public class JerseyClientTest extends JerseyTest {
         final String selection = "some-selection";
         final String dependent = null;
 
-        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/custom/text-xml/" + RequestInfo.UrlVar.SELECTION.var(), null, null);
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/custom/text-xml/" + RequestInfo.UrlVar.SELECTION.var(), null);
         final java.nio.file.Path testTransform = Paths.get(getClass().getResource("custom-transform-test.xslt").toURI());
         final ResponseAction responseAction = new ResponseAction(testTransform);
-        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, responseAction);
+        final Suggestions suggestions = new JerseyClient(AuthenticationType.NONE, client()).getSuggestions(requestInfo, selection, dependent, responseAction);
 
         final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
 
@@ -357,10 +359,10 @@ public class JerseyClientTest extends JerseyTest {
         final String selection = "some-selection";
         final String dependent = "some-dependent";
 
-        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/custom/text-xml/" + RequestInfo.UrlVar.SELECTION.var() + "/" + RequestInfo.UrlVar.DEPENDENT.var(), null, null);
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/custom/text-xml/" + RequestInfo.UrlVar.SELECTION.var() + "/" + RequestInfo.UrlVar.DEPENDENT.var(), null);
         final java.nio.file.Path testTransform = Paths.get(getClass().getResource("custom-transform-test.xslt").toURI());
         final ResponseAction responseAction = new ResponseAction(testTransform);
-        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, responseAction);
+        final Suggestions suggestions = new JerseyClient(AuthenticationType.NONE, client()).getSuggestions(requestInfo, selection, dependent, responseAction);
 
         final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
 
@@ -372,8 +374,8 @@ public class JerseyClientTest extends JerseyTest {
         final String selection = "some-selection";
         final String dependent = null;
 
-        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/gzip/xml/" + RequestInfo.UrlVar.SELECTION.var(), null, null);
-        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, null);
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/gzip/xml/" + RequestInfo.UrlVar.SELECTION.var(), null);
+        final Suggestions suggestions = new JerseyClient(AuthenticationType.NONE, client()).getSuggestions(requestInfo, selection, dependent, null);
 
         final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
 
@@ -385,8 +387,8 @@ public class JerseyClientTest extends JerseyTest {
         final String selection = "some-selection";
         final String dependent = "some-dependent";
 
-        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/gzip/xml/" + RequestInfo.UrlVar.SELECTION.var() + "/" + RequestInfo.UrlVar.DEPENDENT.var(), null, null);
-        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, null);
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/gzip/xml/" + RequestInfo.UrlVar.SELECTION.var() + "/" + RequestInfo.UrlVar.DEPENDENT.var(), null);
+        final Suggestions suggestions = new JerseyClient(AuthenticationType.NONE, client()).getSuggestions(requestInfo, selection, dependent, null);
 
         final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
 
@@ -398,8 +400,8 @@ public class JerseyClientTest extends JerseyTest {
         final String selection = "some-selection";
         final String dependent = null;
 
-        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/json/" + RequestInfo.UrlVar.SELECTION.var(), null, null);
-        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, null);
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/json/" + RequestInfo.UrlVar.SELECTION.var(), null);
+        final Suggestions suggestions = new JerseyClient(AuthenticationType.NONE, client()).getSuggestions(requestInfo, selection, dependent, null);
 
         final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
 
@@ -411,8 +413,8 @@ public class JerseyClientTest extends JerseyTest {
         final String selection = "some-selection";
         final String dependent = "some-dependent";
 
-        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/json/" + RequestInfo.UrlVar.SELECTION.var() + "/" + RequestInfo.UrlVar.DEPENDENT.var(), null, null);
-        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, null);
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/json/" + RequestInfo.UrlVar.SELECTION.var() + "/" + RequestInfo.UrlVar.DEPENDENT.var(), null);
+        final Suggestions suggestions = new JerseyClient(AuthenticationType.NONE, client()).getSuggestions(requestInfo, selection, dependent, null);
 
         final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
 
@@ -424,10 +426,10 @@ public class JerseyClientTest extends JerseyTest {
         final String selection = "some-selection";
         final String dependent = null;
 
-        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/custom/json/" + RequestInfo.UrlVar.SELECTION.var(), null, null);
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/custom/json/" + RequestInfo.UrlVar.SELECTION.var(), null);
         final java.nio.file.Path testTransform = Paths.get(getClass().getResource("custom-transform-test.js").toURI());
         final ResponseAction responseAction = new ResponseAction(testTransform);
-        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, responseAction);
+        final Suggestions suggestions = new JerseyClient(AuthenticationType.NONE, client()).getSuggestions(requestInfo, selection, dependent, responseAction);
 
         final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
 
@@ -439,24 +441,38 @@ public class JerseyClientTest extends JerseyTest {
         final String selection = "some-selection";
         final String dependent = "some-dependent";
 
-        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/custom/json/" + RequestInfo.UrlVar.SELECTION.var() + "/" + RequestInfo.UrlVar.DEPENDENT.var(), null, null);
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/custom/json/" + RequestInfo.UrlVar.SELECTION.var() + "/" + RequestInfo.UrlVar.DEPENDENT.var(), null);
         final java.nio.file.Path testTransform = Paths.get(getClass().getResource("custom-transform-test.js").toURI());
         final ResponseAction responseAction = new ResponseAction(testTransform);
-        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, responseAction);
+        final Suggestions suggestions = new JerseyClient(AuthenticationType.NONE, client()).getSuggestions(requestInfo, selection, dependent, responseAction);
 
         final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
 
         assertEquals(expectedSuggestions.getSuggestion(), suggestions.getSuggestion());
     }
 
-    @Ignore("Requires non-preemptive support in Jersey Server. See https://java.net/jira/browse/JERSEY-2908")
     @Test
-    public void secure_GetLemmaSelection_Xml() {
+    public void secure_preemptiveBasic_GetLemmaSelection_Xml() {
         final String selection = "some-selection";
         final String dependent = null;
 
-        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/secure/getlemma/xml/" + RequestInfo.UrlVar.SELECTION.var(), TEST_USERNAME, TEST_PASSWORD);
-        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, null);
+        final Authentication authentication = new Authentication(Authentication.AuthenticationType.PREEMPTIVE_BASIC, TEST_USERNAME, TEST_PASSWORD);
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/secure/getlemma/xml/" + RequestInfo.UrlVar.SELECTION.var(), authentication);
+        final Suggestions suggestions = new JerseyClient(AuthenticationType.PREEMPTIVE_BASIC, client()).getSuggestions(requestInfo, selection, dependent, null);
+
+        final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
+
+        assertEquals(expectedSuggestions.getSuggestion(), suggestions.getSuggestion());
+    }
+
+    @Test
+    public void secure_preemptiveBasic_GetLemmaSelectionDependent_Xml() {
+        final String selection = "some-selection";
+        final String dependent = "some-dependent";
+
+        final Authentication authentication = new Authentication(Authentication.AuthenticationType.PREEMPTIVE_BASIC, TEST_USERNAME, TEST_PASSWORD);
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/secure/getlemma/xml/" + RequestInfo.UrlVar.SELECTION.var() + "/" + RequestInfo.UrlVar.DEPENDENT.var(), authentication);
+        final Suggestions suggestions = new JerseyClient(AuthenticationType.PREEMPTIVE_BASIC, client()).getSuggestions(requestInfo, selection, dependent, null);
 
         final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
 
@@ -465,12 +481,88 @@ public class JerseyClientTest extends JerseyTest {
 
     @Ignore("Requires non-preemptive support in Jersey Server. See https://java.net/jira/browse/JERSEY-2908")
     @Test
-    public void secure_GetLemmaSelectionDependent_Xml() {
+    public void secure_nonPreemptiveBasic_GetLemmaSelection_Xml() {
+        final String selection = "some-selection";
+        final String dependent = null;
+
+        final Authentication authentication = new Authentication(Authentication.AuthenticationType.NON_PREEMPTIVE_BASIC, TEST_USERNAME, TEST_PASSWORD);
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/secure/getlemma/xml/" + RequestInfo.UrlVar.SELECTION.var(), authentication);
+        final Suggestions suggestions = new JerseyClient(AuthenticationType.NON_PREEMPTIVE_BASIC, client()).getSuggestions(requestInfo, selection, dependent, null);
+
+        final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
+
+        assertEquals(expectedSuggestions.getSuggestion(), suggestions.getSuggestion());
+    }
+
+    @Ignore("Requires non-preemptive support in Jersey Server. See https://java.net/jira/browse/JERSEY-2908")
+    @Test
+    public void secure_nonPreemptiveBasic_GetLemmaSelectionDependent_Xml() {
         final String selection = "some-selection";
         final String dependent = "some-dependent";
 
-        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/secure/getlemma/xml/" + RequestInfo.UrlVar.SELECTION.var() + "/" + RequestInfo.UrlVar.DEPENDENT.var(), TEST_USERNAME, TEST_PASSWORD);
-        final Suggestions suggestions = new JerseyClient(client()).getSuggestions(requestInfo, selection, dependent, null);
+        final Authentication authentication = new Authentication(Authentication.AuthenticationType.NON_PREEMPTIVE_BASIC, TEST_USERNAME, TEST_PASSWORD);
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/secure/getlemma/xml/" + RequestInfo.UrlVar.SELECTION.var() + "/" + RequestInfo.UrlVar.DEPENDENT.var(), authentication);
+        final Suggestions suggestions = new JerseyClient(AuthenticationType.NON_PREEMPTIVE_BASIC, client()).getSuggestions(requestInfo, selection, dependent, null);
+
+        final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
+
+        assertEquals(expectedSuggestions.getSuggestion(), suggestions.getSuggestion());
+    }
+
+    @Ignore("Requires non-preemptive support in Jersey Server. See https://java.net/jira/browse/JERSEY-2908")
+    @Test
+    public void secure_Digest_GetLemmaSelection_Xml() {
+        final String selection = "some-selection";
+        final String dependent = null;
+
+        final Authentication authentication = new Authentication(Authentication.AuthenticationType.DIGEST, TEST_USERNAME, TEST_PASSWORD);
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/secure/getlemma/xml/" + RequestInfo.UrlVar.SELECTION.var(), authentication);
+        final Suggestions suggestions = new JerseyClient(AuthenticationType.DIGEST, client()).getSuggestions(requestInfo, selection, dependent, null);
+
+        final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
+
+        assertEquals(expectedSuggestions.getSuggestion(), suggestions.getSuggestion());
+    }
+
+    @Ignore("Requires non-preemptive support in Jersey Server. See https://java.net/jira/browse/JERSEY-2908")
+    @Test
+    public void secure_Digest_GetLemmaSelectionDependent_Xml() {
+        final String selection = "some-selection";
+        final String dependent = "some-dependent";
+
+        final Authentication authentication = new Authentication(Authentication.AuthenticationType.DIGEST, TEST_USERNAME, TEST_PASSWORD);
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/secure/getlemma/xml/" + RequestInfo.UrlVar.SELECTION.var() + "/" + RequestInfo.UrlVar.DEPENDENT.var(), authentication);
+        final Suggestions suggestions = new JerseyClient(AuthenticationType.DIGEST, client()).getSuggestions(requestInfo, selection, dependent, null);
+
+        final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
+
+        assertEquals(expectedSuggestions.getSuggestion(), suggestions.getSuggestion());
+    }
+
+    @Ignore("Requires non-preemptive support in Jersey Server. See https://java.net/jira/browse/JERSEY-2908")
+    @Test
+    public void secure_nonPreemptiveBasicDigest_GetLemmaSelection_Xml() {
+        final String selection = "some-selection";
+        final String dependent = null;
+
+        final Authentication authentication = new Authentication(Authentication.AuthenticationType.NON_PREEMPTIVE_BASIC_DIGEST, TEST_USERNAME, TEST_PASSWORD);
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/secure/getlemma/xml/" + RequestInfo.UrlVar.SELECTION.var(), authentication);
+        final Suggestions suggestions = new JerseyClient(AuthenticationType.NON_PREEMPTIVE_BASIC_DIGEST, client()).getSuggestions(requestInfo, selection, dependent, null);
+
+        final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
+
+        assertEquals(expectedSuggestions.getSuggestion(), suggestions.getSuggestion());
+    }
+
+    @Ignore("Requires non-preemptive support in Jersey Server. See https://java.net/jira/browse/JERSEY-2908")
+    @Test
+    public void secure_nonPreemptiveBasicDigest_GetLemmaSelectionDependent_Xml() {
+        final String selection = "some-selection";
+        final String dependent = "some-dependent";
+
+        final Authentication authentication = new Authentication(Authentication.AuthenticationType.NON_PREEMPTIVE_BASIC_DIGEST, TEST_USERNAME, TEST_PASSWORD);
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/secure/getlemma/xml/" + RequestInfo.UrlVar.SELECTION.var() + "/" + RequestInfo.UrlVar.DEPENDENT.var(), authentication);
+        final Suggestions suggestions = new JerseyClient(AuthenticationType.NON_PREEMPTIVE_BASIC_DIGEST, client()).getSuggestions(requestInfo, selection, dependent, null);
 
         final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
 
@@ -558,19 +650,23 @@ public class JerseyClientTest extends JerseyTest {
         @Override
         public Principal getUserPrincipal() {
             String auth = requestContext.getHeaderString("Authorization");
-            if(auth != null && auth.startsWith("Basic ")) {
-                auth = auth.replace("Basic ", "");
-                try {
-                    final String userPassDecoded = new String(Base64.decodeBase64(auth), "UTF-8");
-                    final String userPass[] = userPassDecoded.split(":");
-                    if(userPass.length == 2) {
-                        if(userPass[0].equals(TEST_USERNAME) && userPass[1].equals(TEST_PASSWORD)) {
-                            return new AuthenticatedPrincipal(userPass[0]);
+            if(auth != null) {
+                if(auth.startsWith("Basic ")) {
+                    auth = auth.replace("Basic ", "");
+                    try {
+                        final String userPassDecoded = new String(Base64.decodeBase64(auth), "UTF-8");
+                        final String userPass[] = userPassDecoded.split(":");
+                        if (userPass.length == 2) {
+                            if (userPass[0].equals(TEST_USERNAME) && userPass[1].equals(TEST_PASSWORD)) {
+                                return new AuthenticatedPrincipal(userPass[0]);
+                            }
                         }
+                    } catch (final UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                        return null;
                     }
-                } catch(final UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                    return null;
+                } else if(auth.startsWith("Digest ")) {
+                    System.out.println("NEED DIGEST AUTH");
                 }
             }
 

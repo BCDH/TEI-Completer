@@ -27,6 +27,7 @@ import org.glassfish.jersey.moxy.json.MoxyJsonConfig;
 import org.humanistika.ns.tei_completer.Suggestions;
 import org.humanistika.oxygen.tei.completer.configuration.beans.RequestInfo;
 import org.humanistika.oxygen.tei.completer.configuration.beans.ResponseAction;
+import org.humanistika.oxygen.tei.completer.remote.ClientFactory;
 import org.humanistika.oxygen.tei.completer.response.ResponseTransformer;
 import org.humanistika.oxygen.tei.completer.response.TransformationException;
 import org.humanistika.oxygen.tei.completer.response.impl.JSONTransformer;
@@ -38,7 +39,6 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ContextResolver;
@@ -73,22 +73,39 @@ public class JerseyClient extends AbstractClient {
 
     private final Client client;
 
-    public JerseyClient() {
-        this(ClientBuilder.newClient());
+    public JerseyClient(final ClientFactory.AuthenticationType authenticationType) {
+        this(authenticationType, ClientBuilder.newClient());
     }
 
     /**
      * Used for injecting a test client
      * in unit tests
      */
-    JerseyClient(final Client client) {
-        final HttpAuthenticationFeature authFeature = HttpAuthenticationFeature.universalBuilder().build();
-//        final HttpAuthenticationFeature authFeature = HttpAuthenticationFeature.basicBuilder().build();
+    JerseyClient(final ClientFactory.AuthenticationType authenticationType, final Client client) {
         this.client = client
                 .register(GZipEncoder.class)
                 .register(EncodingFilter.class)
-                .register(authFeature)
                 .register(createMoxyJsonResolver());
+
+        switch(authenticationType) {
+            case PREEMPTIVE_BASIC:
+                client.register(HttpAuthenticationFeature.basicBuilder().build());
+                break;
+
+            case NON_PREEMPTIVE_BASIC:
+                client.register(HttpAuthenticationFeature.basicBuilder().nonPreemptive().build());
+                break;
+
+            case DIGEST:
+                client.register(HttpAuthenticationFeature.digest());
+                break;
+
+            case NON_PREEMPTIVE_BASIC_DIGEST:
+                client.register(HttpAuthenticationFeature.universalBuilder().build());
+
+            case NONE:
+            default:
+        }
     }
 
     public static ContextResolver<MoxyJsonConfig> createMoxyJsonResolver() {
@@ -107,10 +124,10 @@ public class JerseyClient extends AbstractClient {
                     .request()
                     .accept(MediaType.APPLICATION_XML, MediaType.TEXT_XML, MediaType.APPLICATION_JSON);
 
-            if(requestInfo.getUsername() != null) {
+            if(requestInfo.getAuthentication() != null) {
                 requestBuilder = requestBuilder
-                        .property(HttpAuthenticationFeature.HTTP_AUTHENTICATION_BASIC_USERNAME, requestInfo.getUsername())
-                        .property(HttpAuthenticationFeature.HTTP_AUTHENTICATION_BASIC_PASSWORD, requestInfo.getPassword());
+                        .property(HttpAuthenticationFeature.HTTP_AUTHENTICATION_USERNAME, requestInfo.getAuthentication().getUsername())
+                        .property(HttpAuthenticationFeature.HTTP_AUTHENTICATION_PASSWORD, requestInfo.getAuthentication().getPassword());
             }
 
             if(responseAction == null) {

@@ -72,8 +72,10 @@ A sample `config.xml` which requests auto-completion suggestions for all `//w/@l
 <?xml version="1.0" encoding="UTF-8"?>
 <config xmlns="http://humanistika.org/ns/tei-completer">
     <server>
-        <username>my-username</username>
-        <password>my-password</password>
+        <authentication type="Preemptive-Basic">
+            <username>my-username</username>
+            <password>my-password</password>
+        </authentication>
         <baseUrl>http://my-server.com/multext</baseUrl>
     </server>
     <autoComplete>

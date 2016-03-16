@@ -17,42 +17,42 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-package org.humanistika.oxygen.tei.completer.remote;
-
-import org.humanistika.oxygen.tei.completer.remote.impl.JerseyClient;
+package org.humanistika.oxygen.tei.completer.configuration.beans;
 
 /**
- * Factory for creating instances of Client
+ * Configuration details for authenticating a request
  *
  * @author Adam Retter, Evolved Binary Ltd <adam.retter@googlemail.com>
  * @version 1.0
- * @serial 20160126
+ * @serial 20160315
  */
-public class ClientFactory {
+public class Authentication {
     public enum AuthenticationType {
-        NONE,
         PREEMPTIVE_BASIC,
         NON_PREEMPTIVE_BASIC,
         DIGEST,
         NON_PREEMPTIVE_BASIC_DIGEST
     }
 
-    private final static ClientFactory instance = new ClientFactory();
+    private final AuthenticationType authenticationType;
+    private final String username;
+    private final String password;
 
-    private ClientFactory() {
+    public Authentication(final AuthenticationType authenticationType, final String username, final String password) {
+        this.authenticationType = authenticationType;
+        this.username = username;
+        this.password = password;
     }
 
-    public final static ClientFactory getInstance() {
-        return instance;
+    public AuthenticationType getAuthenticationType() {
+        return authenticationType;
     }
 
-    /**
-     * Creates a default Client implementation
-     *
-     * @param authenticationType The type of authentication to use
-     * @return The Client implementation
-     */
-    public Client createClient(final AuthenticationType authenticationType) {
-        return new JerseyClient(authenticationType);
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

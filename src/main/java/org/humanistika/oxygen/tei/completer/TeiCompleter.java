@@ -21,13 +21,11 @@ package org.humanistika.oxygen.tei.completer;
 
 import com.evolvedbinary.xpath.parser.ast.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.humanistika.ns.tei_completer.Suggestion;
 import org.humanistika.ns.tei_completer.Suggestions;
+import org.humanistika.oxygen.tei.completer.configuration.beans.Authentication;
 import org.humanistika.oxygen.tei.completer.configuration.beans.AutoComplete;
 import org.humanistika.oxygen.tei.completer.configuration.Configuration;
 import org.humanistika.oxygen.tei.completer.configuration.ConfigurationFactory;
@@ -67,7 +65,8 @@ import static org.humanistika.oxygen.tei.completer.XPathUtil.parseXPath;
 public class TeiCompleter implements SchemaManagerFilter {
     private final static Logger LOGGER = LoggerFactory.getLogger(TeiCompleter.class);
     private final static Configuration configuration = ConfigurationFactory.getInstance().loadConfiguration();
-    private final static Client client = ClientFactory.getInstance().createClient();
+    private final static ClientFactory clientFactory = ClientFactory.getInstance();
+    private final static Map<Authentication.AuthenticationType, Client> clientsWithAuth = new EnumMap<>(Authentication.AuthenticationType.class);
     private final static Map<AutoComplete, AutoCompleteXPaths> cachedAutoCompleteXPaths = new HashMap<>();
 
     @Override
@@ -114,7 +113,8 @@ public class TeiCompleter implements SchemaManagerFilter {
     }
 
     private List<CIValue> requestAutoComplete(final AutoComplete autoComplete, final String selection, @Nullable final String dependent) {
-        final Suggestions suggestions = client.getSuggestions(autoComplete.getRequestInfo(), selection, dependent, autoComplete.getResponseAction());
+        final Authentication.AuthenticationType authenticationType = autoComplete.getRequestInfo().getAuthentication() == null ? null : autoComplete.getRequestInfo().getAuthentication().getAuthenticationType();
+        final Suggestions suggestions = getClient(authenticationType).getSuggestions(autoComplete.getRequestInfo(), selection, dependent, autoComplete.getResponseAction());
         final List<CIValue> results = new ArrayList<>();
         for(final Suggestion suggestion : suggestions.getSuggestion()) {
             results.add(new CIValue(suggestion.getValue(), suggestion.getDescription()));
@@ -122,6 +122,49 @@ public class TeiCompleter implements SchemaManagerFilter {
         return results;
 
         //TODO(AR) consider some visual warnings/errors in Oxygen such as  JOptionPane.showMessageDialog(KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner(), "some error message here");
+    }
+
+    /**
+     * Will get a client which is suitable for the authenticationType
+     *
+     * Clients are reused pre-authentication type
+     */
+    private Client getClient(final Authentication.AuthenticationType authenticationType) {
+        Client client = clientsWithAuth.get(authenticationType);
+        if(client == null) {
+            client = clientFactory.createClient(asClientFactoryAuthenticationType(authenticationType));
+            clientsWithAuth.put(authenticationType, client);
+        }
+        return client;
+    }
+
+    private ClientFactory.AuthenticationType asClientFactoryAuthenticationType(@Nullable final Authentication.AuthenticationType authenticationType) {
+        if(authenticationType == null) {
+            return ClientFactory.AuthenticationType.NONE;
+        } else {
+            final ClientFactory.AuthenticationType clientAuthenticationType;
+            switch (authenticationType) {
+                case PREEMPTIVE_BASIC:
+                    clientAuthenticationType = ClientFactory.AuthenticationType.PREEMPTIVE_BASIC;
+                    break;
+
+                case NON_PREEMPTIVE_BASIC:
+                    clientAuthenticationType = ClientFactory.AuthenticationType.NON_PREEMPTIVE_BASIC;
+                    break;
+
+                case DIGEST:
+                    clientAuthenticationType = ClientFactory.AuthenticationType.DIGEST;
+                    break;
+
+                case NON_PREEMPTIVE_BASIC_DIGEST:
+                    clientAuthenticationType = ClientFactory.AuthenticationType.NON_PREEMPTIVE_BASIC_DIGEST;
+                    break;
+
+                default:
+                    throw new IllegalStateException("Unknown authentication type: " + authenticationType);
+            }
+            return clientAuthenticationType;
+        }
     }
 
     private class AutoCompleteXPaths {

@@ -137,12 +137,51 @@
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="tc:username" minOccurs="0"/>
-        <xs:element ref="tc:password" minOccurs="0"/>
+        <xs:element ref="tc:authentication" minOccurs="0"/>
         <xs:element ref="tc:baseUrl"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:element name="authentication">
+    <xs:annotation>
+      <xs:documentation>The credentials for authenticating with a server.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tc:username"/>
+        <xs:element ref="tc:password"/>
+      </xs:sequence>
+      <xs:attribute name="type" type="tc:authenticationType" use="required">
+        <xs:annotation>
+          <xs:documentation>The type of authentication to use when communicating with the server.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:simpleType name="authenticationType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Preemptive-Basic">
+        <xs:annotation>
+          <xs:documentation>The TEI Completer will pre-emptively send credentials details using the HTTP Basic authentication scheme.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Basic">
+        <xs:annotation>
+          <xs:documentation>The TEI Completer will not pre-emptively send authentication credentials, instead it will send a request without credentials, the server should reply HTTP 401 asking for authentication using the Basic authentication scheme.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Digest">
+        <xs:annotation>
+          <xs:documentation>The TEI Completer will not pre-emptively send authentication credentials, instead it will send a request without credentials, the server should reply HTTP 401 asking for authentication using the Digest authentication scheme.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Basic/Digest">
+        <xs:annotation>
+          <xs:documentation>The TEI Completer will not pre-emptively send authentication credentials, instead it will send a request without credentials, the server should reply HTTP 401 asking for authentication and indicating that the TEI Completer use either the Basic or Digest authentication scheme.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
   <xs:element name="username" type="xs:string">
     <xs:annotation>
       <xs:documentation>A username used for authentication</xs:documentation>
