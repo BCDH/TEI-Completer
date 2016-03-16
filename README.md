@@ -1,13 +1,13 @@
 # TEI Completer
 [![Build Status](https://travis-ci.org/BCDH/TEI-Completer.png?branch=master)](https://travis-ci.org/BCDH/TEI-Completer)
 
-The TEI Completer is a highly customizable plugin for setting up and activating remote-driven autocompletions of attribute values in the oXygen XML Editor. 
+The TEI Completer is a highly customizable plugin for setting up and activating remote-driven autocompletions of attribute values in the [oXygen XML Editor](http://www.oxygenxml.com). 
 
 We use it in a variety of contexts ranging from morphosyntactic annotation and standardization of historical spellings, to linking words with particular dictionary senses and reference strings with entries in authority files. 
 
 While we developed the TEI Completer for very specific use cases in our own projects, we hope it may be useful to other DH scholars who rely on remote sources for their TEI attribute values.
 
-The plugin has been developed at the Belgrade Center for Digital Humanities under the motto "TEI, You... complete me."
+The plugin has been developed at the [Belgrade Center for Digital Humanities](http://www.humanistika.org/) under the motto "*TEI, You... complete me.*"
 
 ![alt text](doc/images/combo.png?raw="true" "TEI Completer in action")
 
@@ -213,7 +213,7 @@ The compiled uber jar file can then be found at `target/tei-completer-1.0-SNAPSH
 
 # Acknowledgements
 
-Hats off to Adam Retter for agreeing to share his superb programming skills with us. 
+Hats off to [Adam Retter](https://github.com/adamretter) for agreeing to share his superb programming skills with us. 
 
 This tool has been developed in the context of two ongoing BCDH projects: *Raskovnik - A Serbian Dictionary Platform* (together with the Institute of Serbian Language), and *Izdanak - Digital Editions of Serbian Texts* (together with the Vuk Karadžić Foundation). Both projects have received funding from the Ministry of Culture and Information of the Republic of Serbia. 
 
