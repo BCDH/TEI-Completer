@@ -335,6 +335,7 @@
                         </goals>
                         <configuration>
                             <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <shadedClassifierName>oxygen-plugin</shadedClassifierName>
                             <relocations>
                                 <relocation>
                                     <!-- Oxygen has an older version of Rhino so we relocate our newer version to a different package -->

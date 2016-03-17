@@ -13,7 +13,7 @@ The plugin has been developed at the [Belgrade Center for Digital Humanities](ht
 
 # Installation
 
-1. Copy the file `tei-completer-1.0-SNAPSHOT-shaded.jar` to `$OXYGEN_HOME/frameworks/tei`.
+1. Copy the file `tei-completer-1.0-SNAPSHOT-oxygen-plugin.jar` to `$OXYGEN_HOME/frameworks/tei`.
 
 	- The location of `$OXYGEN_HOME` will depend on where you have installed Oxygen XML Editor. The following are the known
 default locations for Oxygen:
@@ -40,7 +40,7 @@ default locations for Oxygen:
 
 8. Select the *Classpath* tab, and then click on the `+` button under the list of paths.
 
-9. In the dialog box *Add resources to the classpath*, enter the following text `${framework}/tei-completer-1.0-SNAPSHOT-shaded.jar`, and then click the *OK* button.
+9. In the dialog box *Add resources to the classpath*, enter the following text `${framework}/tei-completer-1.0-SNAPSHOT-oxygen-plugin.jar`, and then click the *OK* button.
 
 	![alt text](https://raw.githubusercontent.com/BCDH/TEI-Completer/master/doc/images/oxygen-edit-tei-p5-document-type-association.jpg "Editing the TEI P5 framework classpath")
 
@@ -208,7 +208,7 @@ $ cd TEI-Completer.git
 $ mvn package
 ```
 
-The compiled uber jar file can then be found at `target/tei-completer-1.0-SNAPSHOT-shaded.jar`.
+The compiled uber jar file can then be found at `target/tei-completer-1.0-SNAPSHOT-oxygen-plugin.jar`.
 
 
 # Acknowledgements
