@@ -19,48 +19,85 @@
  */
 package org.humanistika.oxygen.tei.completer;
 
-import com.evolvedbinary.xpath.parser.XPathParser;
 import com.evolvedbinary.xpath.parser.ast.*;
 import org.jetbrains.annotations.Nullable;
-import org.parboiled.Parboiled;
-import org.parboiled.parserunners.ParseRunner;
-import org.parboiled.parserunners.RecoveringParseRunner;
-import org.parboiled.support.Chars;
-import org.parboiled.support.ParseTreeUtils;
-import org.parboiled.support.ParsingResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 import java.util.List;
-
-import static org.parboiled.errors.ErrorUtils.printParseErrors;
 
 /**
  * @author Adam Retter, Evolved Binary Ltd <adam.retter@googlemail.com>
  * @version 1.0
- * @serial 20160126
+ * @serial 20160316
  */
 public class XPathUtil {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(XPathUtil.class);
-    private static final XPathParser parser = Parboiled.createParser(XPathParser.class, Boolean.TRUE);
 
     public static Expr parseXPath(final String xpath) {
-        final ParseRunner<ASTNode> parseRunner = new RecoveringParseRunner<>(parser.withEOI(parser.XPath()));
-        final ParsingResult<ASTNode> result = parseRunner.run(xpath + Chars.EOI);
 
-        if(LOGGER.isDebugEnabled()) {
-            final String parseTreePrintOut = ParseTreeUtils.printNodeTree(result);
-            LOGGER.debug(parseTreePrintOut);
+        ByteArrayOutputStream osErr = null;
+        PrintStream err = null;
+        ByteArrayOutputStream osOut = null;
+        PrintStream out = null;
+
+        try {
+            osErr = new ByteArrayOutputStream();
+            err = new PrintStream(osErr, true, "UTF-8");
+
+            if (LOGGER.isDebugEnabled()) {
+                osOut = new ByteArrayOutputStream();
+                out = new PrintStream(osOut, true, "UTF-8");
+            }
+
+            final Expr result = com.evolvedbinary.xpath.parser.XPathUtil.parseXPath(xpath, out, err);
+
+            final String strOut = asString(out, osOut);
+            if(!strOut.isEmpty()) {
+                LOGGER.debug(strOut);
+            }
+
+            final String strErr = asString(err, osErr);
+            if(!strErr.isEmpty()) {
+                LOGGER.error(strErr);
+            }
+
+            return result;
+        } catch (final UnsupportedEncodingException e) {
+            LOGGER.error(e.getMessage(), e);
+            return null;
+        } finally {
+            close(out, osOut);
+            close(err, osErr);
         }
+    }
 
-        if(result.hasErrors()) {
-            final String errors = printParseErrors(result);
-            LOGGER.error(errors);
+    private static String asString(final PrintStream ps, ByteArrayOutputStream os) throws UnsupportedEncodingException {
+        if(ps != null) {
+            ps.flush();
+            return os.toString("UTF-8");
+        } else {
+            return "";
         }
+    }
 
-        return (Expr)result.parseTreeRoot.getValue();
+    private static void close(final PrintStream ps, final ByteArrayOutputStream os) {
+        if(ps != null) {
+            ps.close();
+        }
+        if(os != null) {
+            try {
+                os.close();
+            } catch (final IOException e) {
+                LOGGER.error(e.getMessage(), e);
+            }
+        }
     }
 
     public static boolean isSubset(final String subset, final String superset) {
