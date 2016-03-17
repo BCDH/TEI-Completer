@@ -1,5 +1,6 @@
 # TEI Completer
-[![Build Status](https://travis-ci.org/BCDH/TEI-Completer.png?branch=master)](https://travis-ci.org/BCDH/TEI-Completer)
+[![Build Status](https://travis-ci.org/BCDH/TEI-Completer.png?branch=master)](https://travis-ci.org/BCDH/TEI-Completer) [![Java 7+](https://img.shields.io/badge/java-7+-4c7e9f.svg)](http://java.oracle.com) [![License GPL 2](https://img.shields.io/badge/license-GPL%202-blue.svg)](https://www.gnu.org/licenses/gpl-2.0.html) [![Download](https://img.shields.io/badge/download-version%201.0-ff69b4.svg)](http://search.maven.org/remotecontent?filepath=org/humanistika/oxygen/tei-completer/1.0/tei-completer-1.0-oxygen-plugin.jar)
+
 
 The TEI Completer is a highly customizable plugin for setting up and activating remote-driven autocompletions of attribute values in the [oXygen XML Editor](http://www.oxygenxml.com). 
 
@@ -13,7 +14,7 @@ The plugin has been developed at the [Belgrade Center for Digital Humanities](ht
 
 # Installation
 
-1. Copy the file `tei-completer-1.0-SNAPSHOT-oxygen-plugin.jar` to `$OXYGEN_HOME/frameworks/tei`.
+1. Copy the file `tei-completer-1.0-oxygen-plugin.jar` to `$OXYGEN_HOME/frameworks/tei`.
 
 	- The location of `$OXYGEN_HOME` will depend on where you have installed Oxygen XML Editor. The following are the known
 default locations for Oxygen:
@@ -40,7 +41,7 @@ default locations for Oxygen:
 
 8. Select the *Classpath* tab, and then click on the `+` button under the list of paths.
 
-9. In the dialog box *Add resources to the classpath*, enter the following text `${framework}/tei-completer-1.0-SNAPSHOT-oxygen-plugin.jar`, and then click the *OK* button.
+9. In the dialog box *Add resources to the classpath*, enter the following text `${framework}/tei-completer-1.0-oxygen-plugin.jar`, and then click the *OK* button.
 
 	![alt text](https://raw.githubusercontent.com/BCDH/TEI-Completer/master/doc/images/oxygen-edit-tei-p5-document-type-association.jpg "Editing the TEI P5 framework classpath")
 
@@ -208,7 +209,7 @@ $ cd TEI-Completer.git
 $ mvn package
 ```
 
-The compiled uber jar file can then be found at `target/tei-completer-1.0-SNAPSHOT-oxygen-plugin.jar`.
+The compiled uber jar file can then be found at `target/tei-completer-1.1-SNAPSHOT-oxygen-plugin.jar`.
 
 
 # Acknowledgements
