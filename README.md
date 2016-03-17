@@ -24,7 +24,9 @@ The plugin has been developed at the [Belgrade Center for Digital Humanities](ht
 
 # Installation
 
-1. Copy the file `tei-completer-1.0-oxygen-plugin.jar` to `$OXYGEN_HOME/frameworks/tei`.
+1. Download the precompiled binary of the TEI Completer from [here](http://search.maven.org/remotecontent?filepath=org/humanistika/oxygen/tei-completer/1.0/tei-completer-1.0-oxygen-plugin.jar) or [build from source](#building).
+
+2. Copy the file `tei-completer-1.0-oxygen-plugin.jar` to `$OXYGEN_HOME/frameworks/tei`.
 
 	- The location of `$OXYGEN_HOME` will depend on where you have installed Oxygen XML Editor. The following are the known
 default locations for Oxygen:
@@ -35,33 +37,33 @@ default locations for Oxygen:
 
   		* Windows: `C:\Program Files\Oxygen XML Editor 17`
 
-2. Create a [Configuration File](#configuring)
+3. Create a [Configuration File](#configuring)
 
-3. Start Oxygen XML Editor.
+4. Start Oxygen XML Editor.
 
-4. In Oxygen, click on the *File* -> *Preferences* menu, or if you are on Mac OS X then the *Oxygen XML Editor* -> *Preferences* menu.
+5. In Oxygen, click on the *File* -> *Preferences* menu, or if you are on Mac OS X then the *Oxygen XML Editor* -> *Preferences* menu.
 
-5. Select and expand the *Document Type Associaton* item from the left panel.
+6. Select and expand the *Document Type Associaton* item from the left panel.
 
-6. Scroll down and select the `TEI P5` Document Type Association. 
+7. Scroll down and select the `TEI P5` Document Type Association. 
 
 	![alt text](https://raw.githubusercontent.com/BCDH/TEI-Completer/master/doc/images/oxygen-document-type-associations-tei-p5.jpg "Oxygen Document Type Associations")
 
-7. Click the *Edit* button under the list of Document Type Associations
+8. Click the *Edit* button under the list of Document Type Associations
 
-8. Select the *Classpath* tab, and then click on the `+` button under the list of paths.
+9. Select the *Classpath* tab, and then click on the `+` button under the list of paths.
 
-9. In the dialog box *Add resources to the classpath*, enter the following text `${framework}/tei-completer-1.0-oxygen-plugin.jar`, and then click the *OK* button.
+10. In the dialog box *Add resources to the classpath*, enter the following text `${framework}/tei-completer-1.0-oxygen-plugin.jar`, and then click the *OK* button.
 
 	![alt text](https://raw.githubusercontent.com/BCDH/TEI-Completer/master/doc/images/oxygen-edit-tei-p5-document-type-association.jpg "Editing the TEI P5 framework classpath")
 
-10. Select the *Extensions* tab, and then click the *Choose* button beside the entry for *Content completion handler*.
+11. Select the *Extensions* tab, and then click the *Choose* button beside the entry for *Content completion handler*.
 
-11. Select the `TEI Completer - org.humanistika.oxygen.tei.completer` plugin, and then click the *OK* button. 
+12. Select the `TEI Completer - org.humanistika.oxygen.tei.completer` plugin, and then click the *OK* button. 
 
 	![alt text](https://raw.githubusercontent.com/BCDH/TEI-Completer/master/doc/images/oxygen-edit-tei-p5-content-completion-handler.jpg "Editing the TEI P5 Content completion handler")
 
-12. Click the *OK* button to leave the TEI P5 Document Type association dialog, click the *OK* button again to leave the Oxygen Preferences dialog.
+13. Click the *OK* button to leave the TEI P5 Document Type association dialog, click the *OK* button again to leave the Oxygen Preferences dialog.
 
 
 # Configuring
@@ -209,7 +211,7 @@ function transform(content) {
 
 
 
-# Building from Source Code
+# <a name="building"></a> Building from Source Code
 
 * Requirements: Git, Apache Maven 3, Java JDK 7
 
