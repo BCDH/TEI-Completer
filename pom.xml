@@ -112,6 +112,15 @@
             <version>${jersey.version}</version>
         </dependency>
         <dependency>
+            <!-- needed for both `runtime` scope for `jersey-common` and
+            `test` scope for our code. If we don't have this the `test` scope alone
+            causes it to be excluded from the shaded Jar -->
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>1.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-jaxb</artifactId>
             <version>${jersey.version}</version>
@@ -177,12 +186,14 @@
             <version>${jersey.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
+        <!-- see `compile` scoped `javax.annotation-api` dependency
+        above for explanation -->
+        <!-- dependency>
             <groupId>javax.annotation</groupId>
             <artifactId>javax.annotation-api</artifactId>
             <version>1.2</version>
             <scope>test</scope>
-        </dependency>
+        </dependency -->
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
