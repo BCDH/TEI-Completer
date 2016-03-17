@@ -48,6 +48,7 @@
         <jersey.version>2.22.2</jersey.version>
         <slf4j.version>1.7.16</slf4j.version>
         <jaxb2-basics.version>0.11.0</jaxb2-basics.version>
+        <eclipse.persistence.version>2.6.3-M1</eclipse.persistence.version>
         <project.build.source>1.7</project.build.source>
         <project.build.target>1.7</project.build.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -56,22 +57,34 @@
     <dependencies>
         <dependency>
             <groupId>com.oxygenxml</groupId>
-            <artifactId>oxygen-sdk</artifactId>
+            <artifactId>oxygen</artifactId>
             <version>${oxygen.sdk.version}</version>
             <scope>provided</scope>
-            <exclusions>
+            <!-- Exclusion only needed if artifactId is "oxygen-sdk" -->
+            <!-- We use a newer version of Rhino, we avoid conflicts via the Maven Shade plugin (see below) -->
+            <!-- exclusions>
                 <exclusion>
-                    <!-- We use a newer version of Rhino, we avoid conflicts via the Maven Shade plugin (see below) -->
                     <groupId>rhino</groupId>
                     <artifactId>js</artifactId>
                 </exclusion>
-            </exclusions>
+            </exclusions -->
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations-java5</artifactId>
+            <version>15.0</version>
         </dependency>
         <dependency>
             <!-- The newer version of Rhino that we need -->
             <groupId>org.mozilla</groupId>
             <artifactId>rhino</artifactId>
             <version>1.7.7.1</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.saxon</groupId>
+            <artifactId>Saxon-HE</artifactId>
+            <version>9.7.0-1</version>
+            <scope>runtime</scope> <!-- provided by Oxygen -->
         </dependency>
         <dependency>
             <groupId>com.evolvedbinary.xpath</groupId>
@@ -81,11 +94,21 @@
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.moxy</artifactId>
-            <version>2.6.3-M1</version>
+            <version>${eclipse.persistence.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>org.eclipse.persistence.core</artifactId>
+            <version>${eclipse.persistence.version}</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-client</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-common</artifactId>
             <version>${jersey.version}</version>
         </dependency>
         <dependency>
@@ -112,7 +135,7 @@
         <dependency>
             <!-- required for auto-generated equals(Object obj) method in JAXB objects -->
             <groupId>org.jvnet.jaxb2_commons</groupId>
-            <artifactId>jaxb2-basics</artifactId>
+            <artifactId>jaxb2-basics-runtime</artifactId>
             <version>${jaxb2-basics.version}</version>
         </dependency>
 
@@ -148,6 +171,18 @@
             <version>${jersey.version}</version>
             <scope>test</scope>
         </dependency -->
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-server</artifactId>
+            <version>${jersey.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>1.2</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
@@ -226,6 +261,13 @@
                         </goals>
                         <configuration>
                             <failOnWarning>true</failOnWarning>
+                            <!-- ignore various runtime dependency warnings -->
+                            <ignoredUnusedDeclaredDependencies>
+                                <ignoredUnusedDeclaredDependency>net.sf.saxon:Saxon-HE</ignoredUnusedDeclaredDependency>
+                                <ignoredUnusedDeclaredDependency>org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-inmemory</ignoredUnusedDeclaredDependency>
+                                <ignoredUnusedDeclaredDependency>org.slf4j:slf4j-log4j12</ignoredUnusedDeclaredDependency>
+                                <ignoredUnusedDeclaredDependency>org.glassfish.jersey.media:jersey-media-jaxb</ignoredUnusedDeclaredDependency>
+                            </ignoredUnusedDeclaredDependencies>
                         </configuration>
                     </execution>
                 </executions>
@@ -300,6 +342,13 @@
                                     <shadedPattern>org.humanistika.org.mozilla.javascript.internal</shadedPattern>
                                 </relocation>
                             </relocations>
+                            <artifactSet>
+                                <excludes>
+                                    <!-- Oxygen already ships with a version of these, so we needn't package them as well -->
+                                    <exclude>log4j:log4j</exclude>
+                                    <exclude>net.sf.saxon:Saxon-HE</exclude>
+                                </excludes>
+                            </artifactSet>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ApacheLicenseResourceTransformer"/>

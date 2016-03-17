@@ -22,7 +22,11 @@ package org.humanistika.oxygen.tei.completer.response.impl;
 import org.humanistika.oxygen.tei.completer.response.ResponseTransformer;
 import org.humanistika.oxygen.tei.completer.response.TransformationException;
 
-import javax.xml.transform.*;
+import javax.xml.transform.Templates;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.IOException;
