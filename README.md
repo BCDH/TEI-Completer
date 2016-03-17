@@ -1,14 +1,23 @@
 # TEI Completer
 [![Build Status](https://travis-ci.org/BCDH/TEI-Completer.png?branch=master)](https://travis-ci.org/BCDH/TEI-Completer) [![Java 7+](https://img.shields.io/badge/java-7+-4c7e9f.svg)](http://java.oracle.com) [![License GPL 2](https://img.shields.io/badge/license-GPL%202-blue.svg)](https://www.gnu.org/licenses/gpl-2.0.html) [![Download](https://img.shields.io/badge/download-version%201.0-ff69b4.svg)](http://search.maven.org/remotecontent?filepath=org/humanistika/oxygen/tei-completer/1.0/tei-completer-1.0-oxygen-plugin.jar)
 
+The TEI Completer is a highly customizable plugin for setting up and activating remote-driven autocompletions of attribute values in the [oXygen XML Editor](http://www.oxygenxml.com).  
 
-The TEI Completer is a highly customizable plugin for setting up and activating remote-driven autocompletions of attribute values in the [oXygen XML Editor](http://www.oxygenxml.com). 
+We use it in a variety of contexts ranging from morphosyntactic annotation and standardization of historical spellings, to linking words with particular dictionary senses and reference strings with entries in authority files.
 
-We use it in a variety of contexts ranging from morphosyntactic annotation and standardization of historical spellings, to linking words with particular dictionary senses and reference strings with entries in authority files. 
+But we hope that this tool will also be of use to other DH scholars who need to populate [TEI](http://www.tei-c.org/Guidelines/P5/) attributes with values stored and maintained elsewhere. 
 
-While we developed the TEI Completer for very specific use cases in our own projects, we hope it may be useful to other DH scholars who rely on remote sources for their TEI attribute values.
+With the TEI Completer, you can:
+
+- construct specific URLs for querying a server
+- define a context element in your TEI, the attribute to autocomplete on, and an optional dependancy (i.e. another attribute value to send to the server in order to generate suggestions)
+- query multiple servers for multiple autocompletes
+- use Basic or Digest HTTP authentication, should you need it
+- accept either XML or JSON-formatted responses from the server
+- optionally transform server responses with XSL or JavaScript to the format required by the plugin
 
 The plugin has been developed at the [Belgrade Center for Digital Humanities](http://www.humanistika.org/) under the motto "*TEI, You... complete me.*"
+
 
 ![alt text](https://raw.githubusercontent.com/BCDH/TEI-Completer/master/doc/images/combo.jpg "TEI Completer in action")
 
