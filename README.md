@@ -5,7 +5,7 @@ The TEI Completer is a highly customizable plugin for setting up and activating 
 
 We use it in a variety of contexts ranging from morphosyntactic annotation and standardization of historical spellings, to linking words with particular dictionary senses and reference strings with entries in authority files.
 
-But we hope that this tool will also be of use to other DH scholars who need to populate [TEI](http://www.tei-c.org/Guidelines/P5/) attributes with values stored and maintained elsewhere. 
+We hope that this tool will also be of use to other DH scholars who need to populate [TEI](http://www.tei-c.org/Guidelines/P5/) attributes with values stored and maintained elsewhere. 
 
 With the TEI Completer, you can:
 
@@ -15,6 +15,8 @@ With the TEI Completer, you can:
 - use Basic or Digest HTTP authentication, should you need it
 - accept either XML or JSON-formatted responses from the server
 - optionally transform server responses with XSL or JavaScript to the format required by the plugin
+
+The plugin will communicate with your server(s) and provide autocomplete suggestions based on the values in your context element(s) — all this from the comfort of your favorite XML editor. 
 
 The plugin has been developed at the [Belgrade Center for Digital Humanities](http://www.humanistika.org/) under the motto "*TEI, You... complete me.*"
 
