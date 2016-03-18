@@ -66,7 +66,7 @@ public class TeiCompleter implements SchemaManagerFilter {
     private final static Logger LOGGER = LoggerFactory.getLogger(TeiCompleter.class);
     private final static Configuration configuration = ConfigurationFactory.getInstance().loadConfiguration();
     private final static ClientFactory clientFactory = ClientFactory.getInstance();
-    private final static Map<Authentication.AuthenticationType, Client> clientsWithAuth = new EnumMap<>(Authentication.AuthenticationType.class);
+    private final static Map<ClientFactory.AuthenticationType, Client> clientsWithAuth = new EnumMap<>(ClientFactory.AuthenticationType.class);
     private final static Map<AutoComplete, AutoCompleteXPaths> cachedAutoCompleteXPaths = new HashMap<>();
 
     @Override
@@ -130,10 +130,11 @@ public class TeiCompleter implements SchemaManagerFilter {
      * Clients are reused pre-authentication type
      */
     private Client getClient(final Authentication.AuthenticationType authenticationType) {
-        Client client = clientsWithAuth.get(authenticationType);
+        ClientFactory.AuthenticationType cfAuthenticationType = asClientFactoryAuthenticationType(authenticationType);
+        Client client = clientsWithAuth.get(cfAuthenticationType);
         if(client == null) {
-            client = clientFactory.createClient(asClientFactoryAuthenticationType(authenticationType));
-            clientsWithAuth.put(authenticationType, client);
+            client = clientFactory.createClient(cfAuthenticationType);
+            clientsWithAuth.put(cfAuthenticationType, client);
         }
         return client;
     }
