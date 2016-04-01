@@ -137,7 +137,7 @@ public class XPathUtil {
                 } else if(supersetStep.equals(PathExpr.SLASH_SLASH_ABBREV)) {
                     //consume all subsetSteps of superset //X
                     final StepExpr supersetNextStep = supersetSteps.get(++supersetIdx);
-                    while(subsetIdx < subsetSteps.size()) {
+                    while(subsetIdx < subsetSteps.size() - 1) {
                         if(isSubsetStep((AxisStep)subsetSteps.get(++subsetIdx), (AxisStep)supersetNextStep)) {
                             subsetIdx++;
                             break;

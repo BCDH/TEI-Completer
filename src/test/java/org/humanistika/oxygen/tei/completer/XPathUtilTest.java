@@ -59,6 +59,8 @@ public class XPathUtilTest {
         assertTrue(XPathUtil.isSubset("/TEI/text/body/p/w/@lemma", "//w/@lemma"));
         assertTrue(XPathUtil.isSubset("/TEI/text[1]/body[1]/p[2]/w[7]/@lemma", "//w/@lemma"));
 
+        assertTrue(XPathUtil.isSubset("/TEI/text[1]/body[1]/quote[1]/rs[1]/@ref", "//w/@ref"));
+
         //TODO(AR) consider whether these should return true
 //        assertTrue(XPathUtil.isSubset("/TEI/text/body/p/w/@lemma", "//w"));
 //        assertTrue(XPathUtil.isSubset("/TEI/text[1]/body[1]/p[2]/w[7]/@lemma", "//w"));
