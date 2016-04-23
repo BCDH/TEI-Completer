@@ -52,6 +52,7 @@
         <project.build.source>1.7</project.build.source>
         <project.build.target>1.7</project.build.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <enforce.release.jdk-version>(1.7,1.8)</enforce.release.jdk-version>
     </properties>
 
     <dependencies>
@@ -427,6 +428,27 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>1.4.1</version>
+                <executions>
+                    <execution>
+                        <id>enforce-java</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireJavaVersion>
+                                    <version>${enforce.release.jdk-version}</version>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
