@@ -31,7 +31,7 @@ import java.nio.file.Path;
  * @version 1.0
  * @serial 2016028
  */
-public interface ResponseTransformer {
+public interface Transformer {
 
     /**
      * Transform the content using the transformation

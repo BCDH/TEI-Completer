@@ -17,30 +17,31 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-package org.humanistika.oxygen.tei.completer.remote;
+package org.humanistika.oxygen.tei.completer.remote.impl;
+
+import org.humanistika.oxygen.tei.completer.remote.Client;
+import org.humanistika.oxygen.tei.completer.remote.ClientFactory;
 
 /**
- * Factory interface for creating instances of Client
+ * Factory for creating instances of JerseyClient
  *
  * @author Adam Retter, Evolved Binary Ltd <adam.retter@googlemail.com>
  * @version 1.0
  * @serial 20160126
  */
-public interface ClientFactory {
+public class JerseyClientFactory implements ClientFactory {
 
-    /**
-     * Creates a default Client implementation
-     *
-     * @param authenticationType The type of authentication to use
-     * @return The Client implementation
-     */
-    Client createClient(AuthenticationType authenticationType);
+    private final static JerseyClientFactory instance = new JerseyClientFactory();
 
-    enum AuthenticationType {
-        NONE,
-        PREEMPTIVE_BASIC,
-        NON_PREEMPTIVE_BASIC,
-        DIGEST,
-        NON_PREEMPTIVE_BASIC_DIGEST
+    private JerseyClientFactory() {
+    }
+
+    public final static JerseyClientFactory getInstance() {
+        return instance;
+    }
+
+    @Override
+    public Client createClient(final AuthenticationType authenticationType) {
+        return new JerseyClient(authenticationType);
     }
 }

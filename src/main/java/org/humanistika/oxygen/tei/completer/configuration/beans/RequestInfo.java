@@ -42,7 +42,11 @@ public class RequestInfo {
         DEPENDENT;
 
         public String var() {
-            return "$" + underscoreToCamel(name().toLowerCase());
+            return "$" + camelName();
+        }
+
+        public String camelName() {
+            return underscoreToCamel(name().toLowerCase());
         }
 
         private String underscoreToCamel(String str) {

@@ -32,6 +32,8 @@ import org.humanistika.oxygen.tei.completer.configuration.ConfigurationFactory;
 import org.humanistika.oxygen.tei.completer.configuration.beans.Dependent;
 import org.humanistika.oxygen.tei.completer.remote.Client;
 import org.humanistika.oxygen.tei.completer.remote.ClientFactory;
+import org.humanistika.oxygen.tei.completer.remote.ClientFactory.AuthenticationType;
+import org.humanistika.oxygen.tei.completer.remote.impl.JerseyClientFactory;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,10 +66,10 @@ import static org.humanistika.oxygen.tei.completer.XPathUtil.parseXPath;
  */
 public class TeiCompleter implements SchemaManagerFilter {
     private final static Logger LOGGER = LoggerFactory.getLogger(TeiCompleter.class);
-    private final static Configuration configuration = ConfigurationFactory.getInstance().loadConfiguration();
-    private final static ClientFactory clientFactory = ClientFactory.getInstance();
-    private final static Map<ClientFactory.AuthenticationType, Client> clientsWithAuth = new EnumMap<>(ClientFactory.AuthenticationType.class);
+    private final static Map<AuthenticationType, Client> clientsWithAuth = new EnumMap<>(AuthenticationType.class);
     private final static Map<AutoComplete, AutoCompleteXPaths> cachedAutoCompleteXPaths = new HashMap<>();
+
+    protected Configuration<? extends AutoComplete> configuration = null;
 
     @Override
     public String getDescription() {
@@ -81,38 +83,54 @@ public class TeiCompleter implements SchemaManagerFilter {
     @Override
     public List<CIValue> filterAttributeValues(final List<CIValue> list, final WhatPossibleValuesHasAttributeContext context) {
         if (context != null) {
-            final String elemXPath = context.computeContextXPathExpression();
-            final String attrXPath = elemXPath + "/@" + context.getAttributeName();
-            final Expr attributeExpr = parseXPath(attrXPath);
-
-            for (final AutoComplete autoComplete : configuration.getAutoCompletes()) {
-                final AutoCompleteXPaths autoCompleteXPaths = getXPaths(autoComplete);
-
-                if(autoCompleteXPaths != null) {
-                    //check if attributeExpr addresses a subset of autoCompleteXPaths.attributeXPath
-                    if (isSubset(attributeExpr, autoCompleteXPaths.getAttributeXPath())) {
-                        final String selection = getSelection(context, elemXPath, autoComplete);
-
-                        final String dependent;
-                        if(autoComplete.getDependent() != null) {
-                            dependent = getDependent(context, elemXPath, autoComplete.getDependent());
-                        } else {
-                            dependent = null;
-                        }
-
-                        final List<CIValue> suggestions = requestAutoComplete(autoComplete, selection, dependent);
-                        list.addAll(suggestions);
-                        break; //TODO(AR) should we consider all options?
-                    } else {
-                        LOGGER.debug("Attribute XPath '{}' is not a subset of configured auto-complete XPath '{}'", attrXPath, getAutoCompleteAttributeXPath(autoComplete));
-                    }
-                }
+            final AutoCompleteSuggestions<AutoComplete> autoCompleteSuggestions = getAutoCompleteSuggestions(context);
+            if(autoCompleteSuggestions != null) {
+                list.addAll(autoCompleteSuggestions.getSuggestions());
             }
         }
         return list;
     }
 
-    private List<CIValue> requestAutoComplete(final AutoComplete autoComplete, final String selection, @Nullable final String dependent) {
+    /**
+     * Get the autocomplete suggestions from the server if
+     * we have a configured XPath
+     *
+     * @param context The attribute context
+     * @return The list of possible suggestions or null if there was no configured XPath
+     */
+    @Nullable
+    protected final AutoCompleteSuggestions<AutoComplete> getAutoCompleteSuggestions(final WhatPossibleValuesHasAttributeContext context) {
+        final String elemXPath = context.computeContextXPathExpression();
+        final String attrXPath = elemXPath + "/@" + context.getAttributeName();
+        final Expr attributeExpr = parseXPath(attrXPath);
+
+        for (final AutoComplete autoComplete : getConfiguration().getAutoCompletes()) {
+            final AutoCompleteXPaths autoCompleteXPaths = getXPaths(autoComplete);
+
+            if(autoCompleteXPaths != null) {
+                //check if attributeExpr addresses a subset of autoCompleteXPaths.attributeXPath
+                if (isSubset(attributeExpr, autoCompleteXPaths.getAttributeXPath())) {
+                    final String selection = getSelection(context, elemXPath, autoComplete);
+
+                    final String dependent;
+                    if(autoComplete.getDependent() != null) {
+                        dependent = getDependent(context, elemXPath, autoComplete.getDependent());
+                    } else {
+                        dependent = null;
+                    }
+
+                    //TODO(AR) should we consider all options?
+                    return new AutoCompleteSuggestions<>(autoComplete, new AutoCompleteContext(selection, dependent), requestAutoComplete(autoComplete, selection, dependent));
+                } else {
+                    LOGGER.debug("Attribute XPath '{}' is not a subset of configured auto-complete XPath '{}'", attrXPath, getAutoCompleteAttributeXPath(autoComplete));
+                }
+            }
+        }
+
+        return null;
+    }
+
+    protected List<CIValue> requestAutoComplete(final AutoComplete autoComplete, final String selection, @Nullable final String dependent) {
         final Authentication.AuthenticationType authenticationType = autoComplete.getRequestInfo().getAuthentication() == null ? null : autoComplete.getRequestInfo().getAuthentication().getAuthenticationType();
         final Suggestions suggestions = getClient(authenticationType).getSuggestions(autoComplete.getRequestInfo(), selection, dependent, autoComplete.getResponseAction());
         final List<CIValue> results = new ArrayList<>();
@@ -124,41 +142,56 @@ public class TeiCompleter implements SchemaManagerFilter {
         //TODO(AR) consider some visual warnings/errors in Oxygen such as  JOptionPane.showMessageDialog(KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner(), "some error message here");
     }
 
+    protected Configuration<? extends AutoComplete> getConfiguration() {
+        if(configuration == null) {
+            synchronized(this) {
+                if(configuration == null) {
+                    this.configuration = ConfigurationFactory.getInstance().loadConfiguration();
+                }
+            }
+        }
+        return configuration;
+    }
+
+    protected ClientFactory getClientFactory() {
+        return JerseyClientFactory.getInstance();
+    }
+
     /**
      * Will get a client which is suitable for the authenticationType
      *
      * Clients are reused pre-authentication type
      */
-    private Client getClient(final Authentication.AuthenticationType authenticationType) {
-        ClientFactory.AuthenticationType cfAuthenticationType = asClientFactoryAuthenticationType(authenticationType);
+    protected final Client getClient(final Authentication.AuthenticationType authenticationType) {
+        final AuthenticationType cfAuthenticationType = asClientFactoryAuthenticationType(authenticationType);
         Client client = clientsWithAuth.get(cfAuthenticationType);
         if(client == null) {
-            client = clientFactory.createClient(cfAuthenticationType);
+            client = getClientFactory().createClient(cfAuthenticationType);
             clientsWithAuth.put(cfAuthenticationType, client);
         }
         return client;
     }
 
-    private ClientFactory.AuthenticationType asClientFactoryAuthenticationType(@Nullable final Authentication.AuthenticationType authenticationType) {
+    private AuthenticationType asClientFactoryAuthenticationType(@Nullable final Authentication.AuthenticationType authenticationType) {
         if(authenticationType == null) {
-            return ClientFactory.AuthenticationType.NONE;
+            return AuthenticationType.NONE;
         } else {
-            final ClientFactory.AuthenticationType clientAuthenticationType;
+            final AuthenticationType clientAuthenticationType;
             switch (authenticationType) {
                 case PREEMPTIVE_BASIC:
-                    clientAuthenticationType = ClientFactory.AuthenticationType.PREEMPTIVE_BASIC;
+                    clientAuthenticationType = AuthenticationType.PREEMPTIVE_BASIC;
                     break;
 
                 case NON_PREEMPTIVE_BASIC:
-                    clientAuthenticationType = ClientFactory.AuthenticationType.NON_PREEMPTIVE_BASIC;
+                    clientAuthenticationType = AuthenticationType.NON_PREEMPTIVE_BASIC;
                     break;
 
                 case DIGEST:
-                    clientAuthenticationType = ClientFactory.AuthenticationType.DIGEST;
+                    clientAuthenticationType = AuthenticationType.DIGEST;
                     break;
 
                 case NON_PREEMPTIVE_BASIC_DIGEST:
-                    clientAuthenticationType = ClientFactory.AuthenticationType.NON_PREEMPTIVE_BASIC_DIGEST;
+                    clientAuthenticationType = AuthenticationType.NON_PREEMPTIVE_BASIC_DIGEST;
                     break;
 
                 default:
@@ -168,7 +201,7 @@ public class TeiCompleter implements SchemaManagerFilter {
         }
     }
 
-    private class AutoCompleteXPaths {
+    protected class AutoCompleteXPaths {
         private final Expr attributeXPath;
 
         public AutoCompleteXPaths(final Expr attributeXPath) {
@@ -180,7 +213,7 @@ public class TeiCompleter implements SchemaManagerFilter {
         }
     }
 
-    private AutoCompleteXPaths getXPaths(final AutoComplete autoComplete) {
+    protected AutoCompleteXPaths getXPaths(final AutoComplete autoComplete) {
         synchronized(cachedAutoCompleteXPaths) {
             AutoCompleteXPaths autoCompleteXPaths = cachedAutoCompleteXPaths.get(autoComplete);
             if(autoCompleteXPaths == null) {
@@ -193,7 +226,7 @@ public class TeiCompleter implements SchemaManagerFilter {
         }
     }
 
-    private String getAutoCompleteAttributeXPath(final AutoComplete autoComplete) {
+    protected String getAutoCompleteAttributeXPath(final AutoComplete autoComplete) {
         return autoComplete.getContext() + "/" + autoComplete.getAttribute();
     }
 
@@ -217,7 +250,7 @@ public class TeiCompleter implements SchemaManagerFilter {
         return null;
     }
 
-    private String getSelection(final Context context, final String elemXPath, final AutoComplete autoComplete) {
+    protected String getSelection(final Context context, final String elemXPath, final AutoComplete autoComplete) {
         //get the selection by evaluating an XPath
         final String selectionXPath = getAutoCompleteSelectionXPath(elemXPath, autoComplete);
         LOGGER.info("Using selection XPath: {}", selectionXPath);
@@ -237,7 +270,7 @@ public class TeiCompleter implements SchemaManagerFilter {
     }
 
     @Nullable
-    private String getDependent(final Context context, final String elemXPath, final Dependent dependent) {
+    protected String getDependent(final Context context, final String elemXPath, final Dependent dependent) {
         //get the dependent by evaluating an XPath
         final String selectionXPath = getAutoCompleteDependentXPath(elemXPath, dependent);
         LOGGER.info("Using dependent XPath: {}", selectionXPath);
@@ -272,6 +305,52 @@ public class TeiCompleter implements SchemaManagerFilter {
 
     private String getAutoCompleteDependentXPath(final String elemXPath, final Dependent dependent) {
         return elemXPath + "/" + dependent.getAttribute();
+    }
+
+    protected class AutoCompleteContext {
+        private final String selectedValue;
+        @Nullable private final String dependentValue;
+
+        public AutoCompleteContext(final String selectedValue, final String dependentValue) {
+            this.selectedValue = selectedValue;
+            this.dependentValue = dependentValue;
+        }
+
+        public String getSelectedValue() {
+            return selectedValue;
+        }
+
+        @Nullable
+        public String getDependentValue() {
+            return dependentValue;
+        }
+    }
+
+    /**
+     * Holds the detail of AutoComplete config and suggestions found for it
+     */
+    protected class AutoCompleteSuggestions<T> {
+        private final T autoComplete;
+        private final List<CIValue> suggestions;
+        private final AutoCompleteContext autoCompleteContext;
+
+        public AutoCompleteSuggestions(final T autoComplete, final AutoCompleteContext autoCompleteContext, final List<CIValue> suggestions) {
+            this.autoComplete = autoComplete;
+            this.suggestions = suggestions;
+            this.autoCompleteContext = autoCompleteContext;
+        }
+
+        public T getAutoComplete() {
+            return autoComplete;
+        }
+
+        public AutoCompleteContext getAutoCompleteContext() {
+            return autoCompleteContext;
+        }
+
+        public List<CIValue> getSuggestions() {
+            return suggestions;
+        }
     }
 
 

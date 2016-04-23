@@ -19,6 +19,7 @@
  */
 package org.humanistika.oxygen.tei.completer.configuration;
 
+import org.humanistika.oxygen.tei.completer.configuration.beans.AutoComplete;
 import org.humanistika.oxygen.tei.completer.configuration.impl.XmlConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,15 +41,15 @@ public class ConfigurationFactory {
     private final static ConfigurationFactory instance = new ConfigurationFactory();
     private final static String WIN32_USER_APPLICATION_DATA_FOLDER_NAME = "Application Data";
     private final static String CONFIG_FOLDER_NAME = ".bcdh-tei-completer";
-    private final static String CONFIG_FILE_NAME_PREFIX = "config";
+    protected final static String CONFIG_FILE_NAME_PREFIX = "config";
 
-    private final Path configDir;
+    protected final Path configDir;
 
-    private ConfigurationFactory() {
+    protected ConfigurationFactory() {
         this.configDir = getConfigDir();
     }
 
-    public final static ConfigurationFactory getInstance() {
+    public static ConfigurationFactory getInstance() {
         return instance;
     }
 
@@ -57,8 +58,12 @@ public class ConfigurationFactory {
      *
      * @return The loaded Configuration
      */
-    public Configuration loadConfiguration() {
+    public Configuration<? extends AutoComplete> loadConfiguration() {
         return new XmlConfiguration(configDir.resolve(CONFIG_FILE_NAME_PREFIX + ".xml"));
+    }
+
+    protected String getConfigFolderName() {
+        return CONFIG_FOLDER_NAME;
     }
 
     /**
@@ -68,7 +73,7 @@ public class ConfigurationFactory {
      *
      * @return The path to the configuration directory
      */
-    private Path getConfigDir() {
+    protected Path getConfigDir() {
         final String userHome = System.getProperty("user.home");
         final String platform = System.getProperty("platform");
 
@@ -78,9 +83,9 @@ public class ConfigurationFactory {
             if(!(Files.exists(appData) && Files.isWritable(appData))) {
                 LOGGER.error("Windows Application Data folder is not accessible: {}", appData.toAbsolutePath());
             }
-            configDir = appData.resolve(CONFIG_FOLDER_NAME);
+            configDir = appData.resolve(getConfigFolderName());
         } else {
-            configDir = Paths.get(userHome, CONFIG_FOLDER_NAME);
+            configDir = Paths.get(userHome, getConfigFolderName());
         }
 
         if(!Files.exists(configDir)) {

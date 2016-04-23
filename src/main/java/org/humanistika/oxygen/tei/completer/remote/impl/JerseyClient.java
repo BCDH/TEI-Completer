@@ -28,7 +28,7 @@ import org.humanistika.ns.tei_completer.Suggestions;
 import org.humanistika.oxygen.tei.completer.configuration.beans.RequestInfo;
 import org.humanistika.oxygen.tei.completer.configuration.beans.ResponseAction;
 import org.humanistika.oxygen.tei.completer.remote.ClientFactory;
-import org.humanistika.oxygen.tei.completer.response.ResponseTransformer;
+import org.humanistika.oxygen.tei.completer.response.Transformer;
 import org.humanistika.oxygen.tei.completer.response.TransformationException;
 import org.humanistika.oxygen.tei.completer.response.impl.JSONTransformer;
 import org.humanistika.oxygen.tei.completer.response.impl.XMLTransformer;
@@ -63,15 +63,15 @@ import java.util.Map;
  */
 public class JerseyClient extends AbstractClient {
     private final static Logger LOGGER = LoggerFactory.getLogger(JerseyClient.class);
-    private final static Map<String, String> namespacePrefixMapper = new HashMap<>();
+    protected final static Map<String, String> namespacePrefixMapper = new HashMap<>();
     static {
         namespacePrefixMapper.put("http://www.w3.org/2001/XMLSchema-instance", "xsi");
         namespacePrefixMapper.put("http://humanistika.org/ns/tei-completer", "tc");
     }
-    private final static ResponseTransformer jsonTransformer = new JSONTransformer();
-    private final static ResponseTransformer xmlTransformer = new XMLTransformer();
+    protected final static Transformer jsonTransformer = new JSONTransformer();
+    protected final static Transformer xmlTransformer = new XMLTransformer();
 
-    private final Client client;
+    protected final Client client;
 
     public JerseyClient(final ClientFactory.AuthenticationType authenticationType) {
         this(authenticationType, ClientBuilder.newClient());
@@ -81,7 +81,7 @@ public class JerseyClient extends AbstractClient {
      * Used for injecting a test client
      * in unit tests
      */
-    JerseyClient(final ClientFactory.AuthenticationType authenticationType, final Client client) {
+    protected JerseyClient(final ClientFactory.AuthenticationType authenticationType, final Client client) {
         this.client = client
                 .register(GZipEncoder.class)
                 .register(EncodingFilter.class)

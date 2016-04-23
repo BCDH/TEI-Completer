@@ -52,17 +52,17 @@ import static org.humanistika.oxygen.tei.completer.configuration.beans.RequestIn
  * @version 1.0
  * @serial 20160126
  */
-public class XmlConfiguration implements Configuration {
+public class XmlConfiguration<T extends AutoComplete> implements Configuration<T> {
     private final static Logger LOGGER = LoggerFactory.getLogger(XmlConfiguration.class);
-    private final Path configFile;
-    private List<AutoComplete> autoCompletes = null;
+    protected final Path configFile;
+    private List<T> autoCompletes = null;
 
     public XmlConfiguration(final Path configFile) {
         this.configFile = configFile;
     }
 
     @Override
-    public List<AutoComplete> getAutoCompletes() {
+    public List<T> getAutoCompletes() {
         synchronized(this) {
             if(this.autoCompletes == null) {
                 this.autoCompletes = loadAutoCompletes();
@@ -72,7 +72,7 @@ public class XmlConfiguration implements Configuration {
     }
 
     @Nullable
-    private List<AutoComplete> loadAutoCompletes() {
+    protected List<T> loadAutoCompletes() {
         if(Files.notExists(configFile)) {
             LOGGER.error("Configuration file does not exist: {}", configFile.toAbsolutePath());
             return null;
@@ -89,7 +89,7 @@ public class XmlConfiguration implements Configuration {
         }
     }
 
-    private List<AutoComplete> expandConfig(final Config config) {
+    private List<T> expandConfig(final Config config) {
         final List<AutoComplete> autoCompletes = new ArrayList<>();
         for(int i = 0; i <  config.getAutoComplete().size(); i++) {
             final org.humanistika.ns.tei_completer.AutoComplete autoComplete  = config.getAutoComplete().get(i);
@@ -105,11 +105,10 @@ public class XmlConfiguration implements Configuration {
                 );
             }
 
-            final Authentication authentication = resolveAuthentication(config.getServer(), autoComplete.getRequest().getServer());
-
+            final Authentication requestAuthentication = resolveAuthentication(config.getServer(), autoComplete.getRequest().getServer());
             final RequestInfo requestInfo = new RequestInfo(
-                    expandUrl(config.getServer(), autoComplete.getRequest(), i+1, authentication),
-                    authentication
+                    expandUrl(config.getServer(), autoComplete.getRequest(), i+1, requestAuthentication),
+                    requestAuthentication
             );
 
             final ResponseAction responseAction;
@@ -130,7 +129,7 @@ public class XmlConfiguration implements Configuration {
             ));
         }
 
-        return autoCompletes;
+        return (List<T>)autoCompletes;
     }
 
     private String expandUrl(final Server global, final Request specific, final int index, final Authentication authentication) {

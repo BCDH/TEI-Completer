@@ -19,11 +19,10 @@
  */
 package org.humanistika.oxygen.tei.completer.response.impl;
 
-import org.humanistika.oxygen.tei.completer.response.ResponseTransformer;
+import org.humanistika.oxygen.tei.completer.response.Transformer;
 import org.humanistika.oxygen.tei.completer.response.TransformationException;
 
 import javax.xml.transform.Templates;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -41,7 +40,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @version 1.0
  * @serial 2016028
  */
-public class XMLTransformer implements ResponseTransformer {
+public class XMLTransformer implements Transformer {
     static {
         System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
     }
@@ -53,7 +52,7 @@ public class XMLTransformer implements ResponseTransformer {
     public void transform(final InputStream content, final Path transformation, final OutputStream result) throws IOException, TransformationException {
         try {
             final Templates templates = getTemplates(transformation);
-            final Transformer transformer = templates.newTransformer();
+            final javax.xml.transform.Transformer transformer = templates.newTransformer();
             transformer.transform(new StreamSource(content), new StreamResult(result));
         } catch (final TransformerException e) {
             throw new TransformationException(e);

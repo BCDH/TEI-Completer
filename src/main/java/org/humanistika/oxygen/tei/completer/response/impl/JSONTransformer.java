@@ -19,7 +19,7 @@
  */
 package org.humanistika.oxygen.tei.completer.response.impl;
 
-import org.humanistika.oxygen.tei.completer.response.ResponseTransformer;
+import org.humanistika.oxygen.tei.completer.response.Transformer;
 
 import java.io.*;
 
@@ -40,7 +40,7 @@ import org.mozilla.javascript.json.JsonParser;
  * @version 1.0
  * @serial 2016028
  */
-public class JSONTransformer implements ResponseTransformer {
+public class JSONTransformer implements Transformer {
     final static int OPTIMIZATION_LEVEL = 3;
     final static int LANGUAGE_VERSION = Context.VERSION_1_7;
 

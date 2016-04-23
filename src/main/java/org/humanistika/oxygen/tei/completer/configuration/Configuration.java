@@ -30,6 +30,6 @@ import java.util.List;
  * @version 1.0
  * @serial 20160126
  */
-public interface Configuration {
-    List<AutoComplete> getAutoCompletes();
+public interface Configuration<T extends AutoComplete> {
+    List<T> getAutoCompletes();
 }

@@ -262,7 +262,7 @@ public class JerseyClientTest extends JerseyTest {
         final String selection = "some-selection";
         final String dependent = null;
 
-        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/xml_qs?" + RequestInfo.UrlVar.SELECTION.name().toLowerCase() + "=" + RequestInfo.UrlVar.SELECTION.var(), null);
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/xml_qs?" + RequestInfo.UrlVar.SELECTION.camelName() + "=" + RequestInfo.UrlVar.SELECTION.var(), null);
         final Suggestions suggestions = new JerseyClient(AuthenticationType.NONE, client()).getSuggestions(requestInfo, selection, dependent, null);
 
         final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
@@ -275,7 +275,7 @@ public class JerseyClientTest extends JerseyTest {
         final String selection = "some-selection";
         final String dependent = "some-dependent";
 
-        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/xml_qs?" + RequestInfo.UrlVar.SELECTION.name().toLowerCase() + "=" + RequestInfo.UrlVar.SELECTION.var() + "&" + RequestInfo.UrlVar.DEPENDENT.name().toLowerCase() + "=" + RequestInfo.UrlVar.DEPENDENT.var(), null);
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/xml_qs?" + RequestInfo.UrlVar.SELECTION.camelName() + "=" + RequestInfo.UrlVar.SELECTION.var() + "&" + RequestInfo.UrlVar.DEPENDENT.camelName() + "=" + RequestInfo.UrlVar.DEPENDENT.var(), null);
         final Suggestions suggestions = new JerseyClient(AuthenticationType.NONE, client()).getSuggestions(requestInfo, selection, dependent, null);
 
         final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
