@@ -24,7 +24,7 @@ import java.nio.file.Path;
 /**
  * Configuration details for an action that should be applied to a response
  *
- * @author Adam Retter, Evolved Binary Ltd <adam.retter@googlemail.com>
+ * @author Adam Retter, Evolved Binary Ltd
  * @version 1.0
  * @serial 20160126
  */

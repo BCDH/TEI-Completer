@@ -60,7 +60,7 @@ import static org.humanistika.oxygen.tei.completer.XPathUtil.parseXPath;
  * for various attributes.
  * Content values are retrieved from a remote server.
  *
- * @author Adam Retter, Evolved Binary Ltd <adam.retter@googlemail.com>
+ * @author Adam Retter, Evolved Binary Ltd
  * @version 1.0
  * @serial 20160126
  */
@@ -161,6 +161,10 @@ public class TeiCompleter implements SchemaManagerFilter {
      * Will get a client which is suitable for the authenticationType
      *
      * Clients are reused pre-authentication type
+     *
+     * @param authenticationType The type of authentication that a client is needed for
+     *
+     * @return A client which provides the requested authentication type
      */
     protected final Client getClient(final Authentication.AuthenticationType authenticationType) {
         final AuthenticationType cfAuthenticationType = asClientFactoryAuthenticationType(authenticationType);

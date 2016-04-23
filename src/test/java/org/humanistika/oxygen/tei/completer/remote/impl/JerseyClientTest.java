@@ -58,7 +58,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Integration tests for {@link org.humanistika.oxygen.tei.completer.remote.impl.JerseyClient}
  *
- * @author Adam Retter, Evolved Binary Ltd <adam.retter@googlemail.com>
+ * @author Adam Retter, Evolved Binary Ltd
  * @version 1.0
  * @serial 20160126
  */

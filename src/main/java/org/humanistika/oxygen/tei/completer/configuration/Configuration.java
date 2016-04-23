@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * TEI-Completer Configuration interface
  *
- * @author Adam Retter, Evolved Binary Ltd <adam.retter@googlemail.com>
+ * @author Adam Retter, Evolved Binary Ltd
  * @version 1.0
  * @serial 20160126
  */

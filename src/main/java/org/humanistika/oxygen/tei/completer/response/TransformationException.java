@@ -20,7 +20,7 @@
 package org.humanistika.oxygen.tei.completer.response;
 
 /**
- * @author Adam Retter, Evolved Binary Ltd <adam.retter@googlemail.com>
+ * @author Adam Retter, Evolved Binary Ltd
  * @version 1.0
  * @serial 2016028
  */

@@ -22,7 +22,7 @@ package org.humanistika.oxygen.tei.completer.remote;
 /**
  * Factory interface for creating instances of Client
  *
- * @author Adam Retter, Evolved Binary Ltd <adam.retter@googlemail.com>
+ * @author Adam Retter, Evolved Binary Ltd
  * @version 1.0
  * @serial 20160126
  */

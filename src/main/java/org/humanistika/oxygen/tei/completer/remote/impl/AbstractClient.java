@@ -31,7 +31,7 @@ import java.util.Map;
 /**
  * Base class for server clients
  *
- * @author Adam Retter, Evolved Binary Ltd <adam.retter@googlemail.com>
+ * @author Adam Retter, Evolved Binary Ltd
  * @version 1.0
  * @serial 20160126
  */
@@ -47,6 +47,8 @@ public abstract class AbstractClient implements Client {
      * @param dependent The dependent or null
      *
      * @return The URL for connecting to the server
+     *
+     * @throws MalformedURLException If the URL is not malformed
      */
     protected URL getUrl(final RequestInfo requestInfo, final String selection, final @Nullable String dependent) throws MalformedURLException {
         final Map<RequestInfo.UrlVar, String> substitutions = new HashMap<>();

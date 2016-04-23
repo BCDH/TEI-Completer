@@ -25,7 +25,7 @@ import org.humanistika.oxygen.tei.completer.remote.ClientFactory;
 /**
  * Factory for creating instances of JerseyClient
  *
- * @author Adam Retter, Evolved Binary Ltd <adam.retter@googlemail.com>
+ * @author Adam Retter, Evolved Binary Ltd
  * @version 1.0
  * @serial 20160126
  */

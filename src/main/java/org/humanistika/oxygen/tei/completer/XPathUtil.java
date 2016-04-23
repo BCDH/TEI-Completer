@@ -32,7 +32,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @author Adam Retter, Evolved Binary Ltd <adam.retter@googlemail.com>
+ * @author Adam Retter, Evolved Binary Ltd
  * @version 1.0
  * @serial 20160316
  */
@@ -111,6 +111,8 @@ public class XPathUtil {
      * @param subset An expression which to test is a subset of the superset expression
      * @param superset An expression which to test is the superset of the subset expression
      *
+     * @return true if the subset parameter is a valid subset of the superset parameter
+     *
      * @throws IllegalArgumentException If the subset or superset expressions are not absolute paths
      */
     public static boolean isSubset(final Expr subset, final Expr superset) {
@@ -174,7 +176,14 @@ public class XPathUtil {
     }
 
     /**
+     * Check if one axis step is a subset of another
+     *
      * NOTE - currently Ignores predicate lists
+     *
+     * @param subset An axis step which to test is a subset of the superset axis step
+     * @param superset An axis step which to test is the superset of the axis step expression
+     *
+     * @return true if the subset parameter is a valid subset of the superset parameter
      */
     public static boolean isSubsetStep(final AxisStep subset, final AxisStep superset) {
             final Step subsetStep = subset.getStep();

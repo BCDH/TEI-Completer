@@ -29,7 +29,7 @@ import java.util.Map;
  * Configuration details for making a request to a server for getting
  * auto-complete options
  *
- * @author Adam Retter, Evolved Binary Ltd <adam.retter@googlemail.com>
+ * @author Adam Retter, Evolved Binary Ltd
  * @version 1.0
  * @serial 20160126
  */

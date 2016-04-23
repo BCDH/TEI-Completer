@@ -36,7 +36,7 @@ import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.json.JsonParser;
 
 /**
- * @author Adam Retter, Evolved Binary Ltd <adam.retter@googlemail.com>
+ * @author Adam Retter, Evolved Binary Ltd
  * @version 1.0
  * @serial 2016028
  */

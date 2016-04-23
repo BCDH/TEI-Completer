@@ -57,7 +57,7 @@ import java.util.Map;
 /**
  * Server client implemented using Jersey
  *
- * @author Adam Retter, Evolved Binary Ltd <adam.retter@googlemail.com>
+ * @author Adam Retter, Evolved Binary Ltd
  * @version 1.0
  * @serial 20160126
  */
@@ -73,6 +73,9 @@ public class JerseyClient extends AbstractClient {
 
     protected final Client client;
 
+    /**
+     * @param authenticationType The type of authentication to use in the request
+     */
     public JerseyClient(final ClientFactory.AuthenticationType authenticationType) {
         this(authenticationType, ClientBuilder.newClient());
     }
@@ -80,6 +83,9 @@ public class JerseyClient extends AbstractClient {
     /**
      * Used for injecting a test client
      * in unit tests
+     *
+     * @param authenticationType The type of authentication to use in the request
+     * @param client A specific client object to use for the request
      */
     protected JerseyClient(final ClientFactory.AuthenticationType authenticationType, final Client client) {
         this.client = client

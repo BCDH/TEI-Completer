@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * TEI Completer Client interface for getting auto-complete suggestions from a remote server
  *
- * @author Adam Retter, Evolved Binary Ltd <adam.retter@googlemail.com>
+ * @author Adam Retter, Evolved Binary Ltd
  * @version 1.0
  * @serial 20160126
  */

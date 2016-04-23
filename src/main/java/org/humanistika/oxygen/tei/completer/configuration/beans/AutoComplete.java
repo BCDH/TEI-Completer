@@ -27,7 +27,7 @@ import java.util.Map;
  * Configuration details for a element or attribute for which we should
  * attempt to provide auto-complete options
  *
- * @author Adam Retter, Evolved Binary Ltd <adam.retter@googlemail.com>
+ * @author Adam Retter, Evolved Binary Ltd
  * @version 1.0
  * @serial 20160126
  */

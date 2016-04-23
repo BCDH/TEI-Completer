@@ -27,7 +27,7 @@ import java.nio.file.Path;
 /**
  * Transforms a Response from the Server
  *
- * @author Adam Retter, Evolved Binary Ltd <adam.retter@googlemail.com>
+ * @author Adam Retter, Evolved Binary Ltd
  * @version 1.0
  * @serial 2016028
  */
@@ -38,7 +38,10 @@ public interface Transformer {
      *
      * @param content The content to transform
      * @param transformation The transformation to apply to the content
-     * @return The transformed content
+     * @param result The destination for the transformed content
+     *
+     * @throws IOException if an IO exception occurs whilst loading the transformation, or the content is unreadable
+     * @throws TransformationException If an exception occurs whilst executing the transformation
      */
     void transform(final InputStream content, final Path transformation, final OutputStream result) throws IOException, TransformationException;
 }

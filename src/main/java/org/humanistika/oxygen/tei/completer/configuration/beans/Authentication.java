@@ -22,7 +22,7 @@ package org.humanistika.oxygen.tei.completer.configuration.beans;
 /**
  * Configuration details for authenticating a request
  *
- * @author Adam Retter, Evolved Binary Ltd <adam.retter@googlemail.com>
+ * @author Adam Retter, Evolved Binary Ltd
  * @version 1.0
  * @serial 20160315
  */
