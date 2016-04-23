@@ -78,7 +78,7 @@
     <xs:complexType>
       <xs:simpleContent>
         <xs:extension base="tc:attributeName">
-          <xs:attribute name="default" use="optional" type="xs:string">
+          <xs:attribute name="default" type="xs:string">
             <xs:annotation>
               <xs:documentation>An optional default value to be used for the dependency if the attribute value is empty</xs:documentation>
             </xs:annotation>
@@ -205,12 +205,12 @@
       <xs:sequence>
         <xs:element name="binding" maxOccurs="unbounded">
           <xs:complexType>
-            <xs:attribute name="prefix" type="xs:NCName">
+            <xs:attribute name="prefix" type="xs:NCName" use="required">
               <xs:annotation>
                 <xs:documentation>The prefix used in the XPath</xs:documentation>
               </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="namespace" type="xs:anyURI">
+            <xs:attribute name="namespace" type="xs:anyURI" use="required">
               <xs:annotation>
                 <xs:documentation>The namespace to refer to by the <h:i>prefix</h:i></xs:documentation>
               </xs:annotation>
