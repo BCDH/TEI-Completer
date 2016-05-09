@@ -10,7 +10,7 @@ We hope that this tool will also be of use to other DH scholars who need to popu
 With the TEI Completer, you can:
 
 - construct specific URLs for server queries
-- define context elements in your TEI, the attribute to autocomplete on, and an optional dependancy (i.e. another attribute value to send to the server in order to generate suggestions)
+- define context elements in your TEI, the attribute to autocomplete on, and an optional dependency (i.e. another attribute value to send to the server in order to generate suggestions)
 - use basic or digest HTTP authentication, should you need it
 - accept either XML or JSON-formatted responses from the server
 - optionally transform server responses with XSL or JavaScript to the format required by the plugin
