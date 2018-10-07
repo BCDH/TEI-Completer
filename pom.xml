@@ -52,7 +52,7 @@
         <project.build.source>1.8</project.build.source>
         <project.build.target>1.8</project.build.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <enforce.release.jdk-version>(1.8)</enforce.release.jdk-version>
+        <enforce.release.jdk-version>[1.8]</enforce.release.jdk-version>
     </properties>
 
     <dependencies>
