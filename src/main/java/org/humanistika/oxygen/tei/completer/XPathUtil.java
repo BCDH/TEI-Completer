@@ -20,7 +20,7 @@
 package org.humanistika.oxygen.tei.completer;
 
 import com.evolvedbinary.xpath.parser.ast.*;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

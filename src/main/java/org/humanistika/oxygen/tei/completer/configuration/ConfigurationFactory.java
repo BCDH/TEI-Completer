@@ -58,6 +58,7 @@ public class ConfigurationFactory {
      *
      * @return The loaded Configuration
      */
+    @SuppressWarnings("unchecked")
     public Configuration<? extends AutoComplete> loadConfiguration() {
         return new XmlConfiguration(configDir.resolve(CONFIG_FILE_NAME_PREFIX + ".xml"));
     }

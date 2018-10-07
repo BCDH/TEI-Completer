@@ -19,7 +19,7 @@
  */
 package org.humanistika.oxygen.tei.completer.configuration.beans;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 

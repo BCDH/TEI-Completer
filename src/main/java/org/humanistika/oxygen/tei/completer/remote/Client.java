@@ -22,7 +22,7 @@ package org.humanistika.oxygen.tei.completer.remote;
 import org.humanistika.ns.tei_completer.Suggestions;
 import org.humanistika.oxygen.tei.completer.configuration.beans.RequestInfo;
 import org.humanistika.oxygen.tei.completer.configuration.beans.ResponseAction;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * TEI Completer Client interface for getting auto-complete suggestions from a remote server

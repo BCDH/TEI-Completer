@@ -29,7 +29,7 @@ import org.humanistika.oxygen.tei.completer.configuration.beans.Authentication;
 import org.humanistika.oxygen.tei.completer.configuration.beans.RequestInfo;
 import org.humanistika.oxygen.tei.completer.configuration.beans.ResponseAction;
 import org.humanistika.oxygen.tei.completer.remote.ClientFactory.AuthenticationType;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import org.junit.Ignore;
 import org.junit.Test;
 

@@ -34,7 +34,7 @@ import org.humanistika.oxygen.tei.completer.remote.Client;
 import org.humanistika.oxygen.tei.completer.remote.ClientFactory;
 import org.humanistika.oxygen.tei.completer.remote.ClientFactory.AuthenticationType;
 import org.humanistika.oxygen.tei.completer.remote.impl.JerseyClientFactory;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;

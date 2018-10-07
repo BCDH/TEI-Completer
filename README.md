@@ -1,5 +1,5 @@
 # TEI Completer
-[![Build Status](https://travis-ci.org/BCDH/TEI-Completer.png?branch=master)](https://travis-ci.org/BCDH/TEI-Completer) [![Java 7+](https://img.shields.io/badge/java-7+-4c7e9f.svg)](http://java.oracle.com) [![License GPL 2](https://img.shields.io/badge/license-GPL%202-blue.svg)](https://www.gnu.org/licenses/gpl-2.0.html) [![Download](https://img.shields.io/badge/download-version%201.0.2-ff69b4.svg)](http://search.maven.org/remotecontent?filepath=org/humanistika/oxygen/tei-completer/1.0.2/tei-completer-1.0.2-oxygen-plugin.jar)
+[![Build Status](https://travis-ci.org/BCDH/TEI-Completer.png?branch=master)](https://travis-ci.org/BCDH/TEI-Completer) [![Java 8+](https://img.shields.io/badge/java-8+-4c7e9f.svg)](http://java.oracle.com) [![License GPL 2](https://img.shields.io/badge/license-GPL%202-blue.svg)](https://www.gnu.org/licenses/gpl-2.0.html) [![Download](https://img.shields.io/badge/download-version%201.1-ff69b4.svg)](http://search.maven.org/remotecontent?filepath=org/humanistika/oxygen/tei-completer/1.1/tei-completer-1.1-oxygen-plugin.jar)
 
 The TEI Completer is a highly customizable plugin for setting up and activating remote-driven autocompletions of attribute values in the [oXygen XML Editor](http://www.oxygenxml.com).  
 
@@ -24,18 +24,18 @@ The plugin has been developed at the [Belgrade Center for Digital Humanities](ht
 
 # Installation
 
-1. Download the precompiled binary of the TEI Completer from [here](http://search.maven.org/remotecontent?filepath=org/humanistika/oxygen/tei-completer/1.0.2/tei-completer-1.0.2-oxygen-plugin.jar) or [build from source](#building).
+1. Download the precompiled binary of the TEI Completer from [here](http://search.maven.org/remotecontent?filepath=org/humanistika/oxygen/tei-completer/1.1/tei-completer-1.1-oxygen-plugin.jar) or [build from source](#building).
 
-2. Copy the file `tei-completer-1.0.2-oxygen-plugin.jar` to `$OXYGEN_HOME/frameworks/tei`.
+2. Copy the file `tei-completer-1.1-oxygen-plugin.jar` to `$OXYGEN_HOME/frameworks/tei`.
 
 	- The location of `$OXYGEN_HOME` will depend on where you have installed Oxygen XML Editor. The following are the known
 default locations for Oxygen:
 
   		* Mac OS X: `/Applications/oxygen`
 
-  		* Linux: `~/Oxygen XML Editor 17`, or if *sudo*: `/opt/Oxygen XML Editor 17`
+  		* Linux: `~/Oxygen XML Editor 20.1`, or if *sudo*: `/opt/Oxygen XML Editor 20.1`
 
-  		* Windows: `C:\Program Files\Oxygen XML Editor 17`
+  		* Windows: `C:\Program Files\Oxygen XML Editor 20.1`
 
 3. Create a [Configuration File](#configuring)
 
@@ -53,7 +53,7 @@ default locations for Oxygen:
 
 9. Select the *Classpath* tab, and then click on the `+` button under the list of paths.
 
-10. In the dialog box *Add resources to the classpath*, enter the following text `${framework}/tei-completer-1.0.2-oxygen-plugin.jar`, and then click the *OK* button.
+10. In the dialog box *Add resources to the classpath*, enter the following text `${framework}/tei-completer-1.1-oxygen-plugin.jar`, and then click the *OK* button.
 
 	![alt text](https://raw.githubusercontent.com/BCDH/TEI-Completer/master/doc/images/oxygen-edit-tei-p5-document-type-association.jpg "Editing the TEI P5 framework classpath")
 
@@ -107,7 +107,7 @@ A sample `config.xml` which requests auto-completion suggestions for all `//w/@l
 </config>
 ```
 
-If you wish to use a response transformation, these must be written in either XSLT (1.0 or 2.0) or JavaScript (<=1.7). The transformation file must be resolved relative to `config.xml`, that is to say that you should place your transforms in the same folder as `config.xml` (see above). See the [Response Transformations](#response-transformations) section for further details.
+If you wish to use a response transformation, these must be written in either XSLT (1.0 or 2.0) or JavaScript (<=1.8). The transformation file must be resolved relative to `config.xml`, that is to say that you should place your transforms in the same folder as `config.xml` (see above). See the [Response Transformations](#response-transformations) section for further details.
 
 ***NOTE*** Changes to the configuration require restarting Oxygen to be detected.
 
@@ -167,7 +167,7 @@ If your server provides data in an XML format, then you may use either XSLT 1.0 
 
 ## JSON Transformation
 
-If your server provides data in a JSON format, then you may use JavaScript (<= 1.7) to transform that response. You must implement a JavaScript function named `transform`. The `transform` function must accept a single argument which is the JSON object from your server, and must subsequently return a JSON object in the format required by the TEI-Completer.
+If your server provides data in a JSON format, then you may use JavaScript (<= 1.8) to transform that response. You must implement a JavaScript function named `transform`. The `transform` function must accept a single argument which is the JSON object from your server, and must subsequently return a JSON object in the format required by the TEI-Completer.
 
 ### Example JSON transformation
 
@@ -213,7 +213,7 @@ function transform(content) {
 
 # <a name="building"></a> Building from Source Code
 
-* Requirements: Git, Apache Maven 3, Java JDK 7
+* Requirements: Git, Apache Maven 3, Java JDK 8
 
 ```bash
 $ git clone https://github.com/BCDH/TEI-Completer.git

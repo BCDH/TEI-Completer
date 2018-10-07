@@ -21,7 +21,7 @@ package org.humanistika.oxygen.tei.completer.remote.impl;
 
 import org.humanistika.oxygen.tei.completer.configuration.beans.RequestInfo;
 import org.humanistika.oxygen.tei.completer.remote.Client;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.net.MalformedURLException;
 import java.net.URL;

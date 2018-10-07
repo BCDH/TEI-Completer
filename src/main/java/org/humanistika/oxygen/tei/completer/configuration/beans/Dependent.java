@@ -19,7 +19,7 @@
  */
 package org.humanistika.oxygen.tei.completer.configuration.beans;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * Configuration Details of an optional dependency of the {@link AutoComplete#context}

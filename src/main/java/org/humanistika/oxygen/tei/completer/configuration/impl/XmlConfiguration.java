@@ -25,7 +25,7 @@ import org.humanistika.ns.tei_completer.Request;
 import org.humanistika.ns.tei_completer.Server;
 import org.humanistika.oxygen.tei.completer.configuration.Configuration;
 import org.humanistika.oxygen.tei.completer.configuration.beans.*;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,6 +89,7 @@ public class XmlConfiguration<T extends AutoComplete> implements Configuration<T
         }
     }
 
+    @SuppressWarnings("unchecked")
     private List<T> expandConfig(final Config config) {
         final List<AutoComplete> autoCompletes = new ArrayList<>();
         for(int i = 0; i <  config.getAutoComplete().size(); i++) {

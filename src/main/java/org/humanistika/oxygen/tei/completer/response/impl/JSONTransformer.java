@@ -27,6 +27,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.humanistika.oxygen.tei.completer.response.TransformationException;
 import org.mozilla.javascript.Context;
@@ -42,7 +43,20 @@ import org.mozilla.javascript.json.JsonParser;
  */
 public class JSONTransformer implements Transformer {
     final static int OPTIMIZATION_LEVEL = 3;
-    final static int LANGUAGE_VERSION = Context.VERSION_1_7;
+    final static int LANGUAGE_VERSION = Context.VERSION_1_8;
+
+    public static void main(final String args[]) throws IOException, TransformationException {
+        final Transformer transformer = new JSONTransformer();
+        try (final InputStream content = Files.newInputStream(Paths.get("/tmp/forms"))) {
+            try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+
+                final Path transformation = Paths.get("/tmp/transform.js");
+                transformer.transform(content, transformation, baos);
+                System.out.println(new String(baos.toByteArray(), UTF_8));
+            }
+        }
+    }
+
 
     @Override
     public void transform(final InputStream content, final Path transformation, final OutputStream result) throws TransformationException, IOException {

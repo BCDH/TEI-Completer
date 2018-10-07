@@ -32,7 +32,7 @@ import org.humanistika.oxygen.tei.completer.response.Transformer;
 import org.humanistika.oxygen.tei.completer.response.TransformationException;
 import org.humanistika.oxygen.tei.completer.response.impl.JSONTransformer;
 import org.humanistika.oxygen.tei.completer.response.impl.XMLTransformer;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
