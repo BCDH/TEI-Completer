@@ -2,7 +2,11 @@ sudo: false
 
 language: java
 
-jdk:
-    - openjdk7
-    - oraclejdk7
-    - oraclejdk8
+matrix:
+  include:
+    - jdk: openjdk8
+    - jdk: openjdk9
+    - jdk: openjdk10
+    - jdk: openjdk11
+    - os: osx
+      osx_image: xcode10
