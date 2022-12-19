@@ -271,6 +271,19 @@ public class JerseyClientTest extends JerseyTest {
     }
 
     @Test
+    public void getLemmaSelection_Xml_queryString_space() {
+        final String selection = "some selection";
+        final String dependent = null;
+
+        final RequestInfo requestInfo = new RequestInfo(getBaseUri() + "multext/getlemma/xml_qs?" + RequestInfo.UrlVar.SELECTION.camelName() + "=" + RequestInfo.UrlVar.SELECTION.var(), null);
+        final Suggestions suggestions = new JerseyClient(AuthenticationType.NONE, client()).getSuggestions(requestInfo, selection, dependent, null);
+
+        final Suggestions expectedSuggestions = getTestSuggestions(selection, dependent);
+
+        assertEquals(expectedSuggestions.getSuggestion(), suggestions.getSuggestion());
+    }
+
+    @Test
     public void getLemmaSelectionDependent_Xml_queryString() {
         final String selection = "some-selection";
         final String dependent = "some-dependent";

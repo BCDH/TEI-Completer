@@ -21,8 +21,10 @@ package org.humanistika.oxygen.tei.completer.configuration.beans;
 
 import javax.annotation.Nullable;
 
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Map;
 
 /**
@@ -66,11 +68,17 @@ public class RequestInfo {
         this.authentication = authentication;
     }
 
-    public URL getUrl(final Map<UrlVar, String> substitutions) throws MalformedURLException {
+    public URL getUrl(@Nullable final Map<UrlVar, String> substitutions) throws MalformedURLException {
         String expandedUrl = url;
         if(substitutions != null) {
             for (final Map.Entry<UrlVar, String> substitution : substitutions.entrySet()) {
-                expandedUrl = expandedUrl.replace(substitution.getKey().var(), substitution.getValue());
+                final String encodedValue;
+                try {
+                    encodedValue = URLEncoder.encode(substitution.getValue(), "UTF-8");
+                } catch (final UnsupportedEncodingException e) {
+                    throw new MalformedURLException(e.getMessage());
+                }
+                expandedUrl = expandedUrl.replace(substitution.getKey().var(), encodedValue);
             }
         }
         return new URL(expandedUrl);
