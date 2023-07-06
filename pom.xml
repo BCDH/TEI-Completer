@@ -46,9 +46,9 @@
     <properties>
         <oxygen.sdk.version>25.1.0.2</oxygen.sdk.version>
         <jersey.version>2.40</jersey.version>
-        <slf4j.version>1.7.25</slf4j.version>
-        <jaxb2-basics.version>0.12.0</jaxb2-basics.version>
-        <eclipse.persistence.version>2.7.3</eclipse.persistence.version>
+        <slf4j.version>2.0.7</slf4j.version>
+        <jaxb2-basics.version>0.13.1</jaxb2-basics.version>
+        <eclipse.persistence.version>2.7.10</eclipse.persistence.version>
         <project.build.source>1.8</project.build.source>
         <project.build.target>1.8</project.build.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -89,12 +89,6 @@
             <version>2.3.3</version>
             <scope>provided</scope> <!-- provided by Oxygen -->
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.sun.xml.bind</groupId>-->
-<!--            <artifactId>jaxb-core</artifactId>-->
-<!--            <version>2.3.0.1</version>-->
-<!--            <scope>runtime</scope>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-impl</artifactId>
@@ -171,6 +165,13 @@
         </dependency>
 
         <dependency>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+            <version>1.4.01</version>  <!-- provided by Oxygen -->
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>${slf4j.version}</version>
@@ -180,7 +181,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
