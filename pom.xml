@@ -49,6 +49,7 @@
         <slf4j.version>2.0.7</slf4j.version>
         <jaxb2-basics.version>0.13.1</jaxb2-basics.version>
         <eclipse.persistence.version>2.7.10</eclipse.persistence.version>
+        <junit.jupiter.version>5.9.3</junit.jupiter.version>
         <project.build.source>1.8</project.build.source>
         <project.build.target>1.8</project.build.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -179,9 +180,15 @@
         </dependency> <!-- log4j is provided by Oxygen -->
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.2</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.jupiter.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -291,6 +298,7 @@
                                 <ignoredUnusedDeclaredDependency>org.glassfish.jersey.inject:jersey-hk2</ignoredUnusedDeclaredDependency>
                                 <ignoredUnusedDeclaredDependency>org.glassfish:javax.json</ignoredUnusedDeclaredDependency>
                                 <ignoredUnusedDeclaredDependency>com.sun.xml.bind:jaxb-impl</ignoredUnusedDeclaredDependency>
+                                <ignoredUnusedDeclaredDependency>org.junit.jupiter:junit-jupiter-engine</ignoredUnusedDeclaredDependency>
                             </ignoredUnusedDeclaredDependencies>
                             <ignoredNonTestScopedDependencies>
                                 <ignoredNonTestScopedDependency>jakarta.annotation:jakarta.annotation-api</ignoredNonTestScopedDependency>
@@ -325,6 +333,18 @@
                         <compilerArg>-Xlint:deprecation</compilerArg>
                     </compilerArgs>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.1.2</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.junit.jupiter</groupId>
+                        <artifactId>junit-jupiter-engine</artifactId>
+                        <version>${junit.jupiter.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
