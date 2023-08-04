@@ -22,17 +22,15 @@ package org.humanistika.oxygen.tei.completer.configuration.beans;
 import javax.annotation.Nullable;
 
 /**
- * Configuration Details of an optional dependency of the {@link AutoComplete#context}
+ * Configuration Details of an optional selection of the {@link AutoComplete#context}
  */
-public class Dependent {
+public class Selection {
     @Nullable private final String def;  //default
-    private final String attribute;
 
     private final String label;
 
-    public Dependent(@Nullable final String def, final String attribute, final String label) {
+    public Selection(@Nullable final String def, final String label) {
         this.def = def;
-        this.attribute = attribute;
         this.label = label;
     }
 
@@ -40,11 +38,7 @@ public class Dependent {
     public String getDefault() {
         return def;
     }
-
-    public String getAttribute() {
-        return attribute;
-    }
-
+    
     public String getLabel() {
         return label;
     }

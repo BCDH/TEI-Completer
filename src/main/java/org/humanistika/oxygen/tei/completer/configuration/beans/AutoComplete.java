@@ -36,11 +36,11 @@ public class AutoComplete {
     private final String context;
     private final String attribute;
     @Nullable private final Dependent dependent;
-    private final String selection;
+    private final Selection selection;
     private final RequestInfo requestInfo;
     @Nullable private final ResponseAction responseAction;
 
-    public AutoComplete(final Map<String, String> namespaceBindings, final String context, final String attribute, final Dependent dependent, final String selection, final RequestInfo requestInfo, final ResponseAction responseAction) {
+    public AutoComplete(final Map<String, String> namespaceBindings, final String context, final String attribute, final Dependent dependent, final Selection selection, final RequestInfo requestInfo, final ResponseAction responseAction) {
         this.namespaceBindings = namespaceBindings;
         this.context = context;
         this.attribute = attribute;
@@ -67,7 +67,7 @@ public class AutoComplete {
         return dependent;
     }
 
-    public String getSelection() {
+    public Selection getSelection() {
         return selection;
     }
 
@@ -79,4 +79,6 @@ public class AutoComplete {
     public ResponseAction getResponseAction() {
         return responseAction;
     }
+
+
 }
