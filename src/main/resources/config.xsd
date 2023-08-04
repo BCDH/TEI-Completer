@@ -6,10 +6,10 @@
     26 January 2016
 -->
 <xs:schema targetNamespace="http://humanistika.org/ns/tei-completer" version="1.0"
-    elementFormDefault="qualified" 
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:tc="http://humanistika.org/ns/tei-completer"
-    xmlns:h="http://www.w3.org/1999/xhtml">
+           elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tc="http://humanistika.org/ns/tei-completer"
+           xmlns:h="http://www.w3.org/1999/xhtml">
   <xs:annotation>
     <xs:documentation>XML Schema for configuration of the TEI-Completer.</xs:documentation>
   </xs:annotation>
@@ -73,7 +73,7 @@
   </xs:element>
   <xs:element name="dependent">
     <xs:annotation>
-      <xs:documentation>Optional. An attribute which we have a dependency on being non-empty</xs:documentation> 
+      <xs:documentation>Optional. An attribute which we have a dependency on being non-empty</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:simpleContent>
@@ -83,14 +83,30 @@
               <xs:documentation>An optional default value to be used for the dependency if the attribute value is empty</xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="label" type="xs:string" default="Dependent">
+            <xs:annotation>
+              <xs:documentation>A human-readable label for the dependent, this is used in the GUI.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
         </xs:extension>
       </xs:simpleContent>
     </xs:complexType>
   </xs:element>
-  <xs:element name="selection" type="tc:xpathRelativePath">
+  <xs:element name="selection">
     <xs:annotation>
       <xs:documentation>The XPath (relative to the context) to use for the selection. e.g. text()</xs:documentation>
     </xs:annotation>
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="tc:xpathRelativePath">
+          <xs:attribute name="label" type="xs:string" default="Selection">
+            <xs:annotation>
+              <xs:documentation>A human-readable label for the selection, this is used in the GUI.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
   </xs:element>
   <xs:element name="request">
     <xs:annotation>
