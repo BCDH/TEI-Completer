@@ -95,7 +95,7 @@ public class TeiCompleter implements SchemaManagerFilter {
             }
             if(autoCompleteSuggestions != null && autoCompleteSuggestions.getSuggestions().size() == 0) {
                 // the value needs to be prefixed with a space character to bump it to the top of the list
-                list.add(new CustomCIValue(" Custom entry", this));
+                list.add(new CustomCIValue(" Custom Entry...", this));
             }
 
         }
@@ -149,12 +149,16 @@ public class TeiCompleter implements SchemaManagerFilter {
 
     public List<CIValue> requestAutoComplete(final AutoComplete autoComplete, final String selection, @Nullable final String dependent) {
         final Authentication.AuthenticationType authenticationType = autoComplete.getRequestInfo().getAuthentication() == null ? null : autoComplete.getRequestInfo().getAuthentication().getAuthenticationType();
-        final Suggestions suggestions = getClient(authenticationType).getSuggestions(autoComplete.getRequestInfo(), selection, dependent, autoComplete.getResponseAction());
-        final List<CIValue> results = new ArrayList<>();
-        for(final Suggestion suggestion : suggestions.getSuggestion()) {
-            results.add(new CIValue(suggestion.getValue(), suggestion.getDescription()));
+        //TODO USE a constant for this value
+        if(selection.length() > 3 && dependent.length() > 3) {
+            final Suggestions suggestions = getClient(authenticationType).getSuggestions(autoComplete.getRequestInfo(), selection, dependent, autoComplete.getResponseAction());
+            final List<CIValue> results = new ArrayList<>();
+            for(final Suggestion suggestion : suggestions.getSuggestion()) {
+                results.add(new CIValue(suggestion.getValue(), suggestion.getDescription()));
+            }
+            return results;
         }
-        return results;
+        return Collections.emptyList();
 
         //TODO(AR) consider some visual warnings/errors in Oxygen such as  JOptionPane.showMessageDialog(KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner(), "some error message here");
     }

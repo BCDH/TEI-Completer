@@ -11,10 +11,13 @@ import org.jetbrains.annotations.Nullable;
 import ro.sync.contentcompletion.xml.CIValue;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  *
@@ -172,6 +175,36 @@ public class newSuggestionForm extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
+        selectionJTextField.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                textChanged();
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                textChanged();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+
+            }
+        });
+
+        dependentJTextField.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                textChanged();
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                textChanged();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+
+            }
+        });
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -275,6 +308,26 @@ public class newSuggestionForm extends javax.swing.JDialog {
     private javax.swing.JTextField selectionJTextField;
     // End of variables declaration//GEN-END:variables
 
+    private AtomicBoolean runningState = new AtomicBoolean(false);
+
+    private void textChanged() {
+
+        // GATE Keeper
+        // reject if either fields have less than 4 chars
+        // this correspond to requestAutoComplete function as well
+         //TODO USE a constant for this value
+        if(selectionJTextField.getText().length() < 4) return;
+        if(dependentJTextField.getText().length() < 4) return;
+
+        // if we are already fetching results no need to do it again
+        if(runningState.compareAndSet(false, true)) {
+            //No SwingWorker is running.
+            //Create and start swing worker.
+            LiveAutoComplete live = new LiveAutoComplete();
+            live.execute();
+        }
+    }
+
     @Nullable
     public SuggestedAutocomplete getSuggestedAutocomplete() {
         return suggestedAutocomplete;
@@ -283,5 +336,61 @@ public class newSuggestionForm extends javax.swing.JDialog {
     private void customLabels() {
         dependentJLabel.setText(this.teiCompleter.getConfiguration().getAutoCompletes().get(0).getDependent().getLabel() + ":");
         selectionJLabel.setText(this.teiCompleter.getConfiguration().getAutoCompletes().get(0).getSelection().getLabel() + ":");
+    }
+
+    public class LiveAutoComplete extends SwingWorker {
+        List<CIValue> suggestions = new ArrayList<>();
+        String selection;
+        String dependent;
+        @Override
+        protected Object doInBackground() throws Exception {
+
+            DefaultTableModel model = (DefaultTableModel) restultsJTable.getModel();
+            // clear the old results
+            for(int i =0; i < model.getRowCount(); i++) {
+                model.removeRow(i);
+            }
+
+            // Introduce a delay of 300 milliseconds
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                // Handle interruption if necessary
+            }
+
+            // get the text field values after the cooldown
+            selection = selectionJTextField.getText();
+            dependent = dependentJTextField.getText();
+
+            // get the auto complete suggestions based on the user input
+            final List<CIValue> suggestions = new ArrayList<>();
+
+            for (final AutoComplete autoComplete : teiCompleter.getConfiguration().getAutoCompletes()) {
+                suggestions.addAll(teiCompleter.requestAutoComplete(autoComplete, selection, dependent));
+            }
+
+            this.suggestions.addAll(suggestions);
+
+            return null;
+        }
+
+        @Override
+        protected void done() {
+            // Update UI on EDT when the task is complete
+            DefaultTableModel model = (DefaultTableModel) restultsJTable.getModel();
+
+            //populate with the new results
+            for(int i= 0;i< suggestions.size();i++) {
+                results.add(new SuggestedAutocomplete(suggestions.get(i).getValue(), suggestions.get(i).getAnnotation(), new ArrayList<>()));
+                model.addRow(new Object[]{suggestions.get(i).getValue(), suggestions.get(i).getAnnotation()});
+                System.out.println(suggestions.get(i).getAnnotation());
+            }
+
+            if(suggestions.size() == 0) {
+                model.addRow(new Object[]{"No results Matching " + dependent + "+" + selection , ""});
+            }
+
+            runningState.set(false);
+        }
     }
 }
