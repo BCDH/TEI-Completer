@@ -25,6 +25,7 @@ import java.util.*;
 
 import org.humanistika.ns.tei_completer.Suggestion;
 import org.humanistika.ns.tei_completer.Suggestions;
+import org.humanistika.oxygen.tei.completer.GUI.newSuggestionForm;
 import org.humanistika.oxygen.tei.completer.configuration.beans.Authentication;
 import org.humanistika.oxygen.tei.completer.configuration.beans.AutoComplete;
 import org.humanistika.oxygen.tei.completer.configuration.Configuration;
@@ -35,6 +36,7 @@ import org.humanistika.oxygen.tei.completer.remote.ClientFactory;
 import org.humanistika.oxygen.tei.completer.remote.ClientFactory.AuthenticationType;
 import org.humanistika.oxygen.tei.completer.remote.impl.JerseyClientFactory;
 import javax.annotation.Nullable;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
@@ -49,6 +51,10 @@ import ro.sync.contentcompletion.xml.WhatPossibleValuesHasAttributeContext;
 
 import static org.humanistika.oxygen.tei.completer.XPathUtil.isSubset;
 import static org.humanistika.oxygen.tei.completer.XPathUtil.parseXPath;
+
+
+import java.awt.*;
+import java.util.List;
 
 /**
  * TEI-Completer
@@ -87,6 +93,11 @@ public class TeiCompleter implements SchemaManagerFilter {
             if(autoCompleteSuggestions != null) {
                 list.addAll(autoCompleteSuggestions.getSuggestions());
             }
+            if(autoCompleteSuggestions != null && autoCompleteSuggestions.getSuggestions().size() == 0) {
+                // the value needs to be prefixed with a space character to bump it to the top of the list
+                list.add(new CustomCIValue(" Custom Entry...", this));
+            }
+
         }
         return list;
     }
@@ -102,7 +113,13 @@ public class TeiCompleter implements SchemaManagerFilter {
     protected final AutoCompleteSuggestions<AutoComplete> getAutoCompleteSuggestions(final WhatPossibleValuesHasAttributeContext context) {
         final String elemXPath = context.computeContextXPathExpression();
         final String attrXPath = elemXPath + "/@" + context.getAttributeName();
-        final Expr attributeExpr = parseXPath(attrXPath);
+        Expr attributeExpr;
+        try {
+            attributeExpr = parseXPath(attrXPath);
+        } catch (Exception e) {
+            return null;
+        }
+
 
         for (final AutoComplete autoComplete : getConfiguration().getAutoCompletes()) {
             final AutoCompleteXPaths autoCompleteXPaths = getXPaths(autoComplete);
@@ -130,19 +147,24 @@ public class TeiCompleter implements SchemaManagerFilter {
         return null;
     }
 
-    protected List<CIValue> requestAutoComplete(final AutoComplete autoComplete, final String selection, @Nullable final String dependent) {
+    public List<CIValue> requestAutoComplete(final AutoComplete autoComplete, final String selection, @Nullable final String dependent) {
         final Authentication.AuthenticationType authenticationType = autoComplete.getRequestInfo().getAuthentication() == null ? null : autoComplete.getRequestInfo().getAuthentication().getAuthenticationType();
-        final Suggestions suggestions = getClient(authenticationType).getSuggestions(autoComplete.getRequestInfo(), selection, dependent, autoComplete.getResponseAction());
-        final List<CIValue> results = new ArrayList<>();
-        for(final Suggestion suggestion : suggestions.getSuggestion()) {
-            results.add(new CIValue(suggestion.getValue(), suggestion.getDescription()));
+        //TODO USE a constant for this value
+        if(selection.length() > 3 && dependent.length() > 3) {
+            final Suggestions suggestions = getClient(authenticationType).getSuggestions(autoComplete.getRequestInfo(), selection, dependent, autoComplete.getResponseAction());
+            final List<CIValue> results = new ArrayList<>();
+            for(final Suggestion suggestion : suggestions.getSuggestion()) {
+                results.add(new CIValue(suggestion.getValue(), suggestion.getDescription()));
+            }
+            return results;
         }
-        return results;
+        return Collections.emptyList();
 
         //TODO(AR) consider some visual warnings/errors in Oxygen such as  JOptionPane.showMessageDialog(KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner(), "some error message here");
     }
 
-    protected Configuration<? extends AutoComplete> getConfiguration() {
+
+     public Configuration<? extends AutoComplete> getConfiguration() {
         if(configuration == null) {
             synchronized(this) {
                 if(configuration == null) {
@@ -304,7 +326,7 @@ public class TeiCompleter implements SchemaManagerFilter {
     }
 
     private String getAutoCompleteSelectionXPath(final String elemXPath, final AutoComplete autoComplete) {
-        return elemXPath + "/" + autoComplete.getSelection();
+        return elemXPath + "/" + autoComplete.getSelection().getDefault();
     }
 
     private String getAutoCompleteDependentXPath(final String elemXPath, final Dependent dependent) {
@@ -373,5 +395,64 @@ public class TeiCompleter implements SchemaManagerFilter {
     @Override
     public List<CIValue> filterElementValues(final List<CIValue> list, final Context context) {
         return list;
+    }
+
+
+    /**
+     * A CIValue labelled "Add New..." which
+     * prompts the user to enter a new suggestion
+     * via a dialog box
+     */
+    public class CustomCIValue extends CIValue {
+        private TeiCompleter teiCompleter;
+        private String suggestion;
+        public CustomCIValue(String s, final TeiCompleter teiCompleter) {
+            super(s);
+            this.teiCompleter = teiCompleter;
+        }
+
+        @Override
+        public String getInsertString() {
+            if(suggestion == null) {
+                //Ask the user for an autocomplete dependent and selection
+                final SuggestedAutocomplete suggestedAutocomplete = promptUserForNewSuggestion();
+                suggestion = suggestedAutocomplete.getSuggestion();
+            }
+
+            return suggestion;
+        }
+
+        private SuggestedAutocomplete promptUserForNewSuggestion() {
+            final KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+            final Component comp = keyboardFocusManager.getFocusOwner();
+            final Frame parentFrame = getParentFrame(comp);
+            final newSuggestionForm newSuggestionForm = new newSuggestionForm(parentFrame, teiCompleter);
+
+
+
+            //display the dialog
+            newSuggestionForm.setLocationRelativeTo(parentFrame);
+            newSuggestionForm.setVisible(true);
+            final SuggestedAutocomplete suggestedAutocomplete = newSuggestionForm.getSuggestedAutocomplete();
+            newSuggestionForm.dispose();
+            return suggestedAutocomplete;
+        }
+
+        private Frame getParentFrame(final Component component) {
+            if(component == null) {
+                return null;
+            }
+
+            final Component parent = component.getParent();
+            if(parent == null) {
+                return null;
+            }
+
+            if(parent instanceof Frame) {
+                return (Frame)parent;
+            }
+
+            return getParentFrame(parent);
+        }
     }
 }

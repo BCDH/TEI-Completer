@@ -102,7 +102,18 @@ public class XmlConfiguration<T extends AutoComplete> implements Configuration<T
             } else {
                 dependent = new Dependent(
                         autoComplete.getDependent().getDefault(),
-                        autoComplete.getDependent().getValue()
+                        autoComplete.getDependent().getValue(),
+                        autoComplete.getDependent().getLabel()
+                );
+            }
+
+            final Selection selection;
+            if(autoComplete.getSelection() == null) {
+                selection = null;
+            } else {
+                selection = new Selection(
+                        autoComplete.getSelection().getValue(),
+                        autoComplete.getSelection().getLabel()
                 );
             }
 
@@ -124,7 +135,7 @@ public class XmlConfiguration<T extends AutoComplete> implements Configuration<T
                     autoComplete.getContext(),
                     autoComplete.getAttribute(),
                     dependent,
-                    autoComplete.getSelection(),
+                    selection,
                     requestInfo,
                     responseAction
             ));
