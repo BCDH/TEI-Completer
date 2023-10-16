@@ -65,6 +65,13 @@ default locations for Oxygen:
 
 13. Click the *OK* button to leave the TEI P5 Document Type association dialog, click the *OK* button again to leave the Oxygen Preferences dialog.
 
+# Usage
+When editing you press the auto-complete shortcut `CTRL/⌘ + SPACE` then you can select from the drop-down menu.
+![normal workflow](doc/gifs/workflow.gif)
+
+Sometimes the auto completer can not pull all the context from the current tag, in this case you can  press the auto-complete shortcut `CTRL/⌘ + SPACE` then select the custom entry from the drop down menu, a dialog will show up where you can enter the context for the auto complete then click on the fetch button and select the wanted value from the list.
+
+![custom workflow](doc/gifs/custom.gif)
 
 # Configuring
 
@@ -105,6 +112,11 @@ A sample `config.xml` which requests auto-completion suggestions for all `//w/@l
         </response>
     </autoComplete>
 </config>
+```
+You can use labels on Custom entry dialog by setting them in the `config.xml`
+```xml
+<dependent default="default-ana" label="the label you want to show up on the dialog">@ana</dependent>
+<selection label="the label you want to show up on the dialog">./text()</selection>
 ```
 
 If you wish to use a response transformation, these must be written in either XSLT (1.0 or 2.0) or JavaScript (<=1.8). The transformation file must be resolved relative to `config.xml`, that is to say that you should place your transforms in the same folder as `config.xml` (see above). See the [Response Transformations](#response-transformations) section for further details.
