@@ -23,10 +23,11 @@ import com.evolvedbinary.xpath.parser.ast.QNameW;
 
 import static com.evolvedbinary.xpath.parser.ast.QNameW.WILDCARD;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Adam Retter, Evolved Binary Ltd
@@ -66,14 +67,18 @@ public class XPathUtilTest {
 //        assertTrue(XPathUtil.isSubset("/TEI/text[1]/body[1]/p[2]/w[7]/@lemma", "//w"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void isSubset_illegalSubset() {
-        XPathUtil.isSubset("a/b", "//a");
+        assertThrows(IllegalArgumentException.class, () ->
+                XPathUtil.isSubset("a/b", "//a")
+        );
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void isSubset_illegalSuperset() {
-        XPathUtil.isSubset("//a", "a/b");
+        assertThrows(IllegalArgumentException.class, () ->
+                XPathUtil.isSubset("//a", "a/b")
+        );
     }
 
     @Test

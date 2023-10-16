@@ -30,8 +30,8 @@ import org.humanistika.oxygen.tei.completer.configuration.beans.RequestInfo;
 import org.humanistika.oxygen.tei.completer.configuration.beans.ResponseAction;
 import org.humanistika.oxygen.tei.completer.remote.ClientFactory.AuthenticationType;
 import javax.annotation.Nullable;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -53,7 +53,7 @@ import java.nio.file.attribute.UserPrincipal;
 import java.security.Principal;
 import java.util.zip.GZIPOutputStream;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Integration tests for {@link org.humanistika.oxygen.tei.completer.remote.impl.JerseyClient}
@@ -492,7 +492,7 @@ public class JerseyClientTest extends JerseyTest {
         assertEquals(expectedSuggestions.getSuggestion(), suggestions.getSuggestion());
     }
 
-    @Ignore("Requires non-preemptive support in Jersey Server. See https://java.net/jira/browse/JERSEY-2908")
+    @Disabled("Requires non-preemptive support in Jersey Server. See https://java.net/jira/browse/JERSEY-2908")
     @Test
     public void secure_nonPreemptiveBasic_GetLemmaSelection_Xml() {
         final String selection = "some-selection";
@@ -507,7 +507,7 @@ public class JerseyClientTest extends JerseyTest {
         assertEquals(expectedSuggestions.getSuggestion(), suggestions.getSuggestion());
     }
 
-    @Ignore("Requires non-preemptive support in Jersey Server. See https://java.net/jira/browse/JERSEY-2908")
+    @Disabled("Requires non-preemptive support in Jersey Server. See https://java.net/jira/browse/JERSEY-2908")
     @Test
     public void secure_nonPreemptiveBasic_GetLemmaSelectionDependent_Xml() {
         final String selection = "some-selection";
@@ -522,7 +522,7 @@ public class JerseyClientTest extends JerseyTest {
         assertEquals(expectedSuggestions.getSuggestion(), suggestions.getSuggestion());
     }
 
-    @Ignore("Requires non-preemptive support in Jersey Server. See https://java.net/jira/browse/JERSEY-2908")
+    @Disabled("Requires non-preemptive support in Jersey Server. See https://java.net/jira/browse/JERSEY-2908")
     @Test
     public void secure_Digest_GetLemmaSelection_Xml() {
         final String selection = "some-selection";
@@ -537,7 +537,7 @@ public class JerseyClientTest extends JerseyTest {
         assertEquals(expectedSuggestions.getSuggestion(), suggestions.getSuggestion());
     }
 
-    @Ignore("Requires non-preemptive support in Jersey Server. See https://java.net/jira/browse/JERSEY-2908")
+    @Disabled("Requires non-preemptive support in Jersey Server. See https://java.net/jira/browse/JERSEY-2908")
     @Test
     public void secure_Digest_GetLemmaSelectionDependent_Xml() {
         final String selection = "some-selection";
@@ -552,7 +552,7 @@ public class JerseyClientTest extends JerseyTest {
         assertEquals(expectedSuggestions.getSuggestion(), suggestions.getSuggestion());
     }
 
-    @Ignore("Requires non-preemptive support in Jersey Server. See https://java.net/jira/browse/JERSEY-2908")
+    @Disabled("Requires non-preemptive support in Jersey Server. See https://java.net/jira/browse/JERSEY-2908")
     @Test
     public void secure_nonPreemptiveBasicDigest_GetLemmaSelection_Xml() {
         final String selection = "some-selection";
@@ -567,7 +567,7 @@ public class JerseyClientTest extends JerseyTest {
         assertEquals(expectedSuggestions.getSuggestion(), suggestions.getSuggestion());
     }
 
-    @Ignore("Requires non-preemptive support in Jersey Server. See https://java.net/jira/browse/JERSEY-2908")
+    @Disabled("Requires non-preemptive support in Jersey Server. See https://java.net/jira/browse/JERSEY-2908")
     @Test
     public void secure_nonPreemptiveBasicDigest_GetLemmaSelectionDependent_Xml() {
         final String selection = "some-selection";
