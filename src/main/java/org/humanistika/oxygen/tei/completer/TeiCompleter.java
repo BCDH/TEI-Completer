@@ -150,7 +150,7 @@ public class TeiCompleter implements SchemaManagerFilter {
     public List<CIValue> requestAutoComplete(final AutoComplete autoComplete, final String selection, @Nullable final String dependent) {
         final Authentication.AuthenticationType authenticationType = autoComplete.getRequestInfo().getAuthentication() == null ? null : autoComplete.getRequestInfo().getAuthentication().getAuthenticationType();
         //TODO USE a constant for this value
-        if(selection.length() > 3 && dependent.length() > 3) {
+        if(selection.length() > 3) {
             final Suggestions suggestions = getClient(authenticationType).getSuggestions(autoComplete.getRequestInfo(), selection, dependent, autoComplete.getResponseAction());
             final List<CIValue> results = new ArrayList<>();
             for(final Suggestion suggestion : suggestions.getSuggestion()) {
@@ -426,7 +426,7 @@ public class TeiCompleter implements SchemaManagerFilter {
             final KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
             final Component comp = keyboardFocusManager.getFocusOwner();
             final Frame parentFrame = getParentFrame(comp);
-            final newSuggestionForm newSuggestionForm = new newSuggestionForm(parentFrame, teiCompleter);
+            final newSuggestionForm newSuggestionForm = new newSuggestionForm(parentFrame, teiCompleter, autoCompleteContext);
 
 
 
