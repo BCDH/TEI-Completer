@@ -317,7 +317,7 @@ public class newSuggestionForm extends javax.swing.JDialog {
         // this correspond to requestAutoComplete function as well
          //TODO USE a constant for this value
         if(selectionJTextField.getText().length() < 4) return;
-        if(dependentJTextField.getText().length() < 4) return;
+        if(this.teiCompleter.getConfiguration().getAutoCompletes().get(0).getDependent() != null && dependentJTextField.getText().length() < 4) return;
 
         // if we are already fetching results no need to do it again
         if(runningState.compareAndSet(false, true)) {
@@ -333,8 +333,14 @@ public class newSuggestionForm extends javax.swing.JDialog {
         return suggestedAutocomplete;
     }
 
-    private void customLabels() {
-        dependentJLabel.setText(this.teiCompleter.getConfiguration().getAutoCompletes().get(0).getDependent().getLabel() + ":");
+    private void customLabels() {   
+        if(this.teiCompleter.getConfiguration().getAutoCompletes().get(0).getDependent() != null) {
+            dependentJLabel.setText(this.teiCompleter.getConfiguration().getAutoCompletes().get(0).getDependent().getLabel() + ":");
+        } else {
+            dependentJLabel.setVisible(false);
+            dependentJTextField.setVisible(false);
+            selectionJTextField.setPreferredSize(new Dimension(80, selectionJTextField.getHeight()));
+        }
         selectionJLabel.setText(this.teiCompleter.getConfiguration().getAutoCompletes().get(0).getSelection().getLabel() + ":");
     }
 
@@ -351,14 +357,14 @@ public class newSuggestionForm extends javax.swing.JDialog {
                 model.removeRow(i);
             }
 
-            // Introduce a delay of 300 milliseconds
+            // Introduce a delay of 100 milliseconds
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 // Handle interruption if necessary
             }
 
-            // get the text field values after the cooldown
+            // get the text field values after the cool down
             selection = selectionJTextField.getText();
             dependent = dependentJTextField.getText();
 
