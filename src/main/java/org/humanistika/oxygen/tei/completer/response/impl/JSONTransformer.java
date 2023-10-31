@@ -87,7 +87,7 @@ public class JSONTransformer implements Transformer {
                 final char buf[] = new char[4096];
                 int read = -1;
                 try(final Reader jsonReader = new StringReader(jsonResult);
-                    final Writer writer = new OutputStreamWriter(result)) {
+                    final Writer writer = new OutputStreamWriter(result, UTF_8)) {
                     while((read = jsonReader.read(buf)) > -1) {
                         writer.write(buf, 0, read);
                     }
