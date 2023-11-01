@@ -95,7 +95,7 @@ public class TeiCompleter implements SchemaManagerFilter {
             }
             if(autoCompleteSuggestions != null && autoCompleteSuggestions.getSuggestions().size() == 0) {
                 // the value needs to be prefixed with a space character to bump it to the top of the list
-                list.add(new CustomCIValue(" Custom Entry...", this));
+                list.add(new CustomCIValue(" Custom Entry...", this, autoCompleteSuggestions.autoCompleteContext));
             }
 
         }
@@ -333,7 +333,7 @@ public class TeiCompleter implements SchemaManagerFilter {
         return elemXPath + "/" + dependent.getAttribute();
     }
 
-    protected class AutoCompleteContext {
+     public class AutoCompleteContext {
         private final String selectedValue;
         @Nullable private final String dependentValue;
 
@@ -405,10 +405,12 @@ public class TeiCompleter implements SchemaManagerFilter {
      */
     public class CustomCIValue extends CIValue {
         private TeiCompleter teiCompleter;
+        private AutoCompleteContext autoCompleteContext;
         private String suggestion;
-        public CustomCIValue(String s, final TeiCompleter teiCompleter) {
+        public CustomCIValue(String s, final TeiCompleter teiCompleter, final AutoCompleteContext autoCompleteContext) {
             super(s);
             this.teiCompleter = teiCompleter;
+            this.autoCompleteContext = autoCompleteContext;
         }
 
         @Override
@@ -426,7 +428,7 @@ public class TeiCompleter implements SchemaManagerFilter {
             final KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
             final Component comp = keyboardFocusManager.getFocusOwner();
             final Frame parentFrame = getParentFrame(comp);
-            final newSuggestionForm newSuggestionForm = new newSuggestionForm(parentFrame, teiCompleter);
+            final newSuggestionForm newSuggestionForm = new newSuggestionForm(parentFrame, teiCompleter, autoCompleteContext);
 
 
 

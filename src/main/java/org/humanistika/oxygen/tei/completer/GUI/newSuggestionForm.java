@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class newSuggestionForm extends javax.swing.JDialog {
     private TeiCompleter teiCompleter;
+    private TeiCompleter.AutoCompleteContext autoCompleteContext;
     private SuggestedAutocomplete suggestedAutocomplete = null;
 
     private ArrayList<SuggestedAutocomplete> results = new ArrayList<>();
@@ -32,9 +33,10 @@ public class newSuggestionForm extends javax.swing.JDialog {
     /**
      * Creates new form JDialogForm
      */
-    public newSuggestionForm(java.awt.Frame parent, final TeiCompleter teiCompleter) {
+    public newSuggestionForm(java.awt.Frame parent, final TeiCompleter teiCompleter, final TeiCompleter.AutoCompleteContext autoCompleteContext) {
         super(parent, ModalityType.DOCUMENT_MODAL);
         this.teiCompleter = teiCompleter;
+        this.autoCompleteContext = autoCompleteContext;
         initComponents();
         customLabels();
     }
@@ -336,12 +338,14 @@ public class newSuggestionForm extends javax.swing.JDialog {
     private void customLabels() {   
         if(this.teiCompleter.getConfiguration().getAutoCompletes().get(0).getDependent() != null) {
             dependentJLabel.setText(this.teiCompleter.getConfiguration().getAutoCompletes().get(0).getDependent().getLabel() + ":");
-        } else {
+            dependentJTextField.setText(autoCompleteContext.getDependentValue());
+        }else {
             dependentJLabel.setVisible(false);
             dependentJTextField.setVisible(false);
             selectionJTextField.setPreferredSize(new Dimension(80, selectionJTextField.getHeight()));
         }
         selectionJLabel.setText(this.teiCompleter.getConfiguration().getAutoCompletes().get(0).getSelection().getLabel() + ":");
+        selectionJTextField.setText(autoCompleteContext.getSelectedValue());
     }
 
     public class LiveAutoComplete extends SwingWorker {
