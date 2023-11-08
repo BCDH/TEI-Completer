@@ -236,6 +236,9 @@ public class newSuggestionForm extends javax.swing.JDialog {
         //get the model to populate the table
         DefaultTableModel model = (DefaultTableModel) restultsJTable.getModel();
 
+        // clear the old results
+        model.setRowCount(0);
+
         for(int i= 0;i< suggestions.size();i++) {
             results.add(new SuggestedAutocomplete(suggestions.get(i).getValue(), suggestions.get(i).getAnnotation(), new ArrayList<>()));
             model.addRow(new Object[]{suggestions.get(i).getValue(), suggestions.get(i).getAnnotation()});
@@ -357,9 +360,7 @@ public class newSuggestionForm extends javax.swing.JDialog {
 
             DefaultTableModel model = (DefaultTableModel) restultsJTable.getModel();
             // clear the old results
-            for(int i =0; i < model.getRowCount(); i++) {
-                model.removeRow(i);
-            }
+            model.setRowCount(0);
 
             // Introduce a delay of 100 milliseconds
             try {
