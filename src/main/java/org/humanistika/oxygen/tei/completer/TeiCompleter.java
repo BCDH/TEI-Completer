@@ -55,6 +55,7 @@ import static org.humanistika.oxygen.tei.completer.XPathUtil.parseXPath;
 
 import java.awt.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * TEI-Completer
@@ -90,12 +91,19 @@ public class TeiCompleter implements SchemaManagerFilter {
     public List<CIValue> filterAttributeValues(final List<CIValue> list, final WhatPossibleValuesHasAttributeContext context) {
         if (context != null) {
             final AutoCompleteSuggestions<AutoComplete> autoCompleteSuggestions = getAutoCompleteSuggestions(context);
+
             if(autoCompleteSuggestions != null) {
-                list.addAll(autoCompleteSuggestions.getSuggestions());
+                List<CIValue> spacePrefixedList = autoCompleteSuggestions.getSuggestions().stream().map(ciValue -> {
+                    ciValue.setValue(" " + ciValue.getValue());
+                    return ciValue;
+                }).collect(Collectors.toList());
+
+                list.addAll(spacePrefixedList);
             }
+
             if(autoCompleteSuggestions != null) {
                 // the value needs to be prefixed with a space character to bump it to the top of the list
-                list.add(new CustomCIValue(" Custom lookup...", this, autoCompleteSuggestions.autoCompleteContext));
+                list.add(new CustomCIValue("\uD83D\uDC49 Custom lookup...", this, autoCompleteSuggestions.autoCompleteContext));
             }
 
         }
