@@ -339,10 +339,10 @@ public class newSuggestionForm extends javax.swing.JDialog {
         if(this.teiCompleter.getConfiguration().getAutoCompletes().get(0).getDependent() != null) {
             dependentJLabel.setText(this.teiCompleter.getConfiguration().getAutoCompletes().get(0).getDependent().getLabel() + ":");
             dependentJTextField.setText(autoCompleteContext.getDependentValue());
-        }else {
+        } else {
             dependentJLabel.setVisible(false);
             dependentJTextField.setVisible(false);
-            selectionJTextField.setPreferredSize(new Dimension(80, selectionJTextField.getHeight()));
+            selectionJTextField.setPreferredSize(new Dimension(200, selectionJTextField.getHeight()));
         }
         selectionJLabel.setText(this.teiCompleter.getConfiguration().getAutoCompletes().get(0).getSelection().getLabel() + ":");
         selectionJTextField.setText(autoCompleteContext.getSelectedValue());
