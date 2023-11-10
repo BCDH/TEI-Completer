@@ -95,7 +95,7 @@ public class TeiCompleter implements SchemaManagerFilter {
             }
             if(autoCompleteSuggestions != null && autoCompleteSuggestions.getSuggestions().size() == 0) {
                 // the value needs to be prefixed with a space character to bump it to the top of the list
-                list.add(new CustomCIValue(" Custom Entry...", this, autoCompleteSuggestions.autoCompleteContext));
+                list.add(new CustomCIValue(" Custom lookup...", this, autoCompleteSuggestions.autoCompleteContext));
             }
 
         }
