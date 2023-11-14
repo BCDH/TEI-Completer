@@ -19,10 +19,8 @@
  */
 package org.humanistika.oxygen.tei.completer;
 
-
-import org.jetbrains.annotations.Nullable;
-
 import java.util.List;
+import javax.annotation.Nullable;
 
 public class SuggestedAutocomplete {
 

@@ -22,9 +22,9 @@ package org.humanistika.oxygen.tei.completer.GUI;
 import org.humanistika.oxygen.tei.completer.SuggestedAutocomplete;
 import org.humanistika.oxygen.tei.completer.TeiCompleter;
 import org.humanistika.oxygen.tei.completer.configuration.beans.AutoComplete;
-import org.jetbrains.annotations.Nullable;
 import ro.sync.contentcompletion.xml.CIValue;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
