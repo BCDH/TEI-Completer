@@ -1,14 +1,24 @@
 name: Build
 on: [push, pull_request]
+
 jobs:
-  build:
-    runs-on: macos-latest
+  assemble:
+    name: Build and Test
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        jdk: [8,11,17]
+    runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK 8
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Java
         uses: actions/setup-java@v3
         with:
-          java-version: '8'
           distribution: 'temurin'
-      - name: Build with Maven
-        run: mvn clean test
+          java-version: ${{ matrix.jdk }}
+      - name: Compile
+        run: mvn clean compile
+      - name: Test
+        run: mvn verify
