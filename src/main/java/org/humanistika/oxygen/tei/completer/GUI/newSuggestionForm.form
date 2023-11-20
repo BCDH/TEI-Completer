@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-
+<!--
+    TEI-Completer UI form
+    @author: Adam Retter
+    @version: 1.0
+    14 Nov 2023
+-->
 <Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="2"/>

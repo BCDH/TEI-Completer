@@ -234,6 +234,7 @@
                         <organization>${project.organization.name}</organization>
                     </properties>
                     <excludes>
+                        <exclude>.github/**</exclude>
                         <exclude>**/pom.xml</exclude>
                         <exclude>**/README.md</exclude>
                         <exclude>**/LICENSE</exclude>
