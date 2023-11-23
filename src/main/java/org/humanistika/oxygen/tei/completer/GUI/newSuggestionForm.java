@@ -263,10 +263,11 @@ public class newSuggestionForm extends javax.swing.JDialog {
 
         for (final AutoComplete autoComplete : teiCompleter.getConfiguration().getAutoCompletes()) {
             //check if attributeExpr addresses a subset of autoCompleteXPaths.attributeXPath
+            // only request auto completer suggestions if it matches
             final TeiCompleter.AutoCompleteXPaths autoCompleteXPaths = teiCompleter.getXPaths(autoComplete);
-            if (!isSubset(attributeExpr, autoCompleteXPaths.getAttributeXPath())) continue;
-
-            suggestions.addAll(teiCompleter.requestAutoComplete(autoComplete, selection, dependent));
+            if (isSubset(attributeExpr, autoCompleteXPaths.getAttributeXPath())) {
+                suggestions.addAll(teiCompleter.requestAutoComplete(autoComplete, selection, dependent));
+            }
         }
 
         //get the model to populate the table
@@ -424,10 +425,12 @@ public class newSuggestionForm extends javax.swing.JDialog {
 
             for (final AutoComplete autoComplete : teiCompleter.getConfiguration().getAutoCompletes()) {
                 //check if attributeExpr addresses a subset of autoCompleteXPaths.attributeXPath
+                // only request auto complete suggestions if it matches
                 final TeiCompleter.AutoCompleteXPaths autoCompleteXPaths = teiCompleter.getXPaths(autoComplete);
-                if (!isSubset(attributeExpr, autoCompleteXPaths.getAttributeXPath())) continue;
+                if (isSubset(attributeExpr, autoCompleteXPaths.getAttributeXPath())) {
+                    suggestions.addAll(teiCompleter.requestAutoComplete(autoComplete, selection, dependent));
 
-                suggestions.addAll(teiCompleter.requestAutoComplete(autoComplete, selection, dependent));
+                }
             }
 
             this.suggestions.addAll(suggestions);
