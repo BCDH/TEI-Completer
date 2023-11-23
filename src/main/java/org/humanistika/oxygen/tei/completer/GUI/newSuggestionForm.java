@@ -19,10 +19,12 @@
  */
 package org.humanistika.oxygen.tei.completer.GUI;
 
+import com.evolvedbinary.xpath.parser.ast.Expr;
 import org.humanistika.oxygen.tei.completer.SuggestedAutocomplete;
 import org.humanistika.oxygen.tei.completer.TeiCompleter;
 import org.humanistika.oxygen.tei.completer.configuration.beans.AutoComplete;
 import ro.sync.contentcompletion.xml.CIValue;
+import ro.sync.contentcompletion.xml.WhatPossibleValuesHasAttributeContext;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -34,6 +36,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static org.humanistika.oxygen.tei.completer.XPathUtil.isSubset;
+import static org.humanistika.oxygen.tei.completer.XPathUtil.parseXPath;
+
 /**
  *
  * @author younes
@@ -41,6 +46,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class newSuggestionForm extends javax.swing.JDialog {
     private TeiCompleter teiCompleter;
     private TeiCompleter.AutoCompleteContext autoCompleteContext;
+    private WhatPossibleValuesHasAttributeContext context;
     private SuggestedAutocomplete suggestedAutocomplete = null;
 
     private ArrayList<SuggestedAutocomplete> results = new ArrayList<>();
@@ -48,10 +54,11 @@ public class newSuggestionForm extends javax.swing.JDialog {
     /**
      * Creates new form JDialogForm
      */
-    public newSuggestionForm(java.awt.Frame parent, final TeiCompleter teiCompleter, final TeiCompleter.AutoCompleteContext autoCompleteContext) {
+    public newSuggestionForm(java.awt.Frame parent, final TeiCompleter teiCompleter, final TeiCompleter.AutoCompleteContext autoCompleteContext, final WhatPossibleValuesHasAttributeContext context) {
         super(parent, ModalityType.DOCUMENT_MODAL);
         this.teiCompleter = teiCompleter;
         this.autoCompleteContext = autoCompleteContext;
+        this.context = context;
         initComponents();
         customLabels();
     }
@@ -244,8 +251,23 @@ public class newSuggestionForm extends javax.swing.JDialog {
         // get the auto complete suggestions based on the user input
         final List<CIValue> suggestions = new ArrayList<>();
 
+        final String elemXPath = context.computeContextXPathExpression();
+        final String attrXPath = elemXPath + "/@" + context.getAttributeName();
+        Expr attributeExpr;
+        try {
+            attributeExpr = parseXPath(attrXPath);
+        } catch (Exception e) {
+            return;
+        }
+
+
         for (final AutoComplete autoComplete : teiCompleter.getConfiguration().getAutoCompletes()) {
-            suggestions.addAll(teiCompleter.requestAutoComplete(autoComplete, selection, dependent));
+            //check if attributeExpr addresses a subset of autoCompleteXPaths.attributeXPath
+            // only request auto completer suggestions if it matches
+            final TeiCompleter.AutoCompleteXPaths autoCompleteXPaths = teiCompleter.getXPaths(autoComplete);
+            if (isSubset(attributeExpr, autoCompleteXPaths.getAttributeXPath())) {
+                suggestions.addAll(teiCompleter.requestAutoComplete(autoComplete, selection, dependent));
+            }
         }
 
         //get the model to populate the table
@@ -391,8 +413,24 @@ public class newSuggestionForm extends javax.swing.JDialog {
             // get the auto complete suggestions based on the user input
             final List<CIValue> suggestions = new ArrayList<>();
 
+            final String elemXPath = context.computeContextXPathExpression();
+            final String attrXPath = elemXPath + "/@" + context.getAttributeName();
+            Expr attributeExpr;
+            try {
+                attributeExpr = parseXPath(attrXPath);
+            } catch (Exception e) {
+                throw new Exception(e);
+            }
+
+
             for (final AutoComplete autoComplete : teiCompleter.getConfiguration().getAutoCompletes()) {
-                suggestions.addAll(teiCompleter.requestAutoComplete(autoComplete, selection, dependent));
+                //check if attributeExpr addresses a subset of autoCompleteXPaths.attributeXPath
+                // only request auto complete suggestions if it matches
+                final TeiCompleter.AutoCompleteXPaths autoCompleteXPaths = teiCompleter.getXPaths(autoComplete);
+                if (isSubset(attributeExpr, autoCompleteXPaths.getAttributeXPath())) {
+                    suggestions.addAll(teiCompleter.requestAutoComplete(autoComplete, selection, dependent));
+
+                }
             }
 
             this.suggestions.addAll(suggestions);

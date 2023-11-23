@@ -103,7 +103,7 @@ public class TeiCompleter implements SchemaManagerFilter {
 
             if(autoCompleteSuggestions != null) {
                 // the value needs to be prefixed with a space character to bump it to the top of the list
-                list.add(new CustomCIValue("\uD83D\uDC49 Custom lookup...", this, autoCompleteSuggestions.autoCompleteContext));
+                list.add(new CustomCIValue("\uD83D\uDC49 Custom lookup...", this, autoCompleteSuggestions.autoCompleteContext, context));
             }
 
         }
@@ -235,7 +235,7 @@ public class TeiCompleter implements SchemaManagerFilter {
         }
     }
 
-    protected class AutoCompleteXPaths {
+    public class AutoCompleteXPaths {
         private final Expr attributeXPath;
 
         public AutoCompleteXPaths(final Expr attributeXPath) {
@@ -247,7 +247,7 @@ public class TeiCompleter implements SchemaManagerFilter {
         }
     }
 
-    protected AutoCompleteXPaths getXPaths(final AutoComplete autoComplete) {
+    public AutoCompleteXPaths getXPaths(final AutoComplete autoComplete) {
         synchronized(cachedAutoCompleteXPaths) {
             AutoCompleteXPaths autoCompleteXPaths = cachedAutoCompleteXPaths.get(autoComplete);
             if(autoCompleteXPaths == null) {
@@ -414,11 +414,14 @@ public class TeiCompleter implements SchemaManagerFilter {
     public class CustomCIValue extends CIValue {
         private TeiCompleter teiCompleter;
         private AutoCompleteContext autoCompleteContext;
+
+        private WhatPossibleValuesHasAttributeContext context;
         private String suggestion;
-        public CustomCIValue(String s, final TeiCompleter teiCompleter, final AutoCompleteContext autoCompleteContext) {
+        public CustomCIValue(String s, final TeiCompleter teiCompleter, final AutoCompleteContext autoCompleteContext, final WhatPossibleValuesHasAttributeContext context) {
             super(s);
             this.teiCompleter = teiCompleter;
             this.autoCompleteContext = autoCompleteContext;
+            this.context = context;
         }
 
         @Override
@@ -436,7 +439,7 @@ public class TeiCompleter implements SchemaManagerFilter {
             final KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
             final Component comp = keyboardFocusManager.getFocusOwner();
             final Frame parentFrame = getParentFrame(comp);
-            final newSuggestionForm newSuggestionForm = new newSuggestionForm(parentFrame, teiCompleter, autoCompleteContext);
+            final newSuggestionForm newSuggestionForm = new newSuggestionForm(parentFrame, teiCompleter, autoCompleteContext, context);
 
 
 
