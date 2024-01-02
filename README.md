@@ -221,7 +221,10 @@ function transform(content) {
 }
 ```
 
+# <a name="troubleshooting"></a> Troubleshooting
 
+If you have unexpected issues with the TEI Completer plugin for oXygen XML Editor, it may be useful to enable logging in oXygen to gather more information.
+oXygen utilises the log4j logging framework, and the TEI Completer plugin is also designed to write its log messages to that framework. To enable logging in Oxygen see this article: (Where are oxygen author application log files?)[https://www.oxygenxml.com/forum/common-problems/topic22087.html].
 
 # <a name="building"></a> Building from Source Code
 
