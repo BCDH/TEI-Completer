@@ -355,11 +355,11 @@ public class newSuggestionForm extends javax.swing.JDialog {
     private void textChanged() {
 
         // GATE Keeper
-        // reject if either fields have less than 4 chars
+        // reject if either fields have less than 3 chars
         // this correspond to requestAutoComplete function as well
          //TODO USE a constant for this value
-        if(selectionJTextField.getText().length() < 4) return;
-        if(this.teiCompleter.getConfiguration().getAutoCompletes().get(0).getDependent() != null && dependentJTextField.getText().length() < 4) return;
+        if(selectionJTextField.getText().length() < 3) return;
+        if(this.teiCompleter.getConfiguration().getAutoCompletes().get(0).getDependent() != null && dependentJTextField.getText().length() < 3) return;
 
         // if we are already fetching results no need to do it again
         if(runningState.compareAndSet(false, true)) {
@@ -394,6 +394,9 @@ public class newSuggestionForm extends javax.swing.JDialog {
         String dependent;
         @Override
         protected Object doInBackground() throws Exception {
+
+            fetchjButton.setText("Loading...");
+            fetchjButton.setEnabled(false);
 
             DefaultTableModel model = (DefaultTableModel) restultsJTable.getModel();
             // clear the old results
@@ -441,6 +444,8 @@ public class newSuggestionForm extends javax.swing.JDialog {
         @Override
         protected void done() {
             // Update UI on EDT when the task is complete
+            fetchjButton.setText("Search...");
+            fetchjButton.setEnabled(true);
             DefaultTableModel model = (DefaultTableModel) restultsJTable.getModel();
 
             //populate with the new results
