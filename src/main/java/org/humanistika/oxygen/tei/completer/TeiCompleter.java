@@ -158,7 +158,7 @@ public class TeiCompleter implements SchemaManagerFilter {
     public List<CIValue> requestAutoComplete(final AutoComplete autoComplete, final String selection, @Nullable final String dependent) {
         final Authentication.AuthenticationType authenticationType = autoComplete.getRequestInfo().getAuthentication() == null ? null : autoComplete.getRequestInfo().getAuthentication().getAuthenticationType();
         //TODO USE a constant for this value
-        if(selection.length() > 3) {
+        if(selection.length() >= 3) {
             final Suggestions suggestions = getClient(authenticationType).getSuggestions(autoComplete.getRequestInfo(), selection, dependent, autoComplete.getResponseAction());
             final List<CIValue> results = new ArrayList<>();
             for(final Suggestion suggestion : suggestions.getSuggestion()) {
