@@ -84,7 +84,7 @@ public class newSuggestionForm extends javax.swing.JDialog {
         restultsJTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Custom lookup");
+
         cancleJButton.setText("Cancel");
         cancleJButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -96,15 +96,25 @@ public class newSuggestionForm extends javax.swing.JDialog {
         jLabel1.setText("Custom lookup");
 
         dependentJLabel.setText("Dependent:");
-        dependentJLabel.setToolTipText("");
 
-        dependentJTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                dependentJTextFieldActionPerformed(evt);
+        dependentJTextField.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+            }
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+                dependentJTextFieldInputMethodTextChanged(evt);
             }
         });
 
         selectionJLabel.setText("Selection:");
+
+        selectionJTextField.setMinimumSize(new java.awt.Dimension(200, 22));
+        selectionJTextField.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+            }
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+                selectionJTextFieldInputMethodTextChanged(evt);
+            }
+        });
 
         fetchjButton.setText("Search...");
         fetchjButton.addActionListener(new java.awt.event.ActionListener() {
@@ -115,16 +125,17 @@ public class newSuggestionForm extends javax.swing.JDialog {
 
         restultsJTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
+
             },
             new String [] {
-                 "Value", "Description"
+                "Value", "Description"
             }
         ) {
             Class[] types = new Class [] {
-                    java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                 false, false
+                false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -144,11 +155,6 @@ public class newSuggestionForm extends javax.swing.JDialog {
         jScrollPane2.setViewportView(restultsJTable);
         restultsJTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
-        restultsJTable.setCellSelectionEnabled(false);
-        restultsJTable.setRowSelectionAllowed(true);
-
-        restultsJTable.getColumnModel().getColumn(0).setPreferredWidth(120);
-        restultsJTable.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -159,22 +165,20 @@ public class newSuggestionForm extends javax.swing.JDialog {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(cancleJButton))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 460, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel1)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(dependentJLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(dependentJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(16, 16, 16)
-                                .addComponent(selectionJLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(selectionJTextField))
-                            .addComponent(fetchjButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 706, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel1)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(8, 8, 8)
+                            .addComponent(selectionJLabel)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(selectionJTextField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(6, 6, 6)
+                            .addComponent(dependentJLabel)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(dependentJTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE))
+                        .addComponent(fetchjButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -189,7 +193,7 @@ public class newSuggestionForm extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(selectionJLabel)
-                    .addComponent(selectionJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(selectionJTextField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(8, 8, 8)
                 .addComponent(fetchjButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -199,36 +203,6 @@ public class newSuggestionForm extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        selectionJTextField.getDocument().addDocumentListener(new DocumentListener() {
-            public void insertUpdate(DocumentEvent e) {
-                textChanged();
-            }
-
-            public void removeUpdate(DocumentEvent e) {
-                textChanged();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-
-            }
-        });
-
-        dependentJTextField.getDocument().addDocumentListener(new DocumentListener() {
-            public void insertUpdate(DocumentEvent e) {
-                textChanged();
-            }
-
-            public void removeUpdate(DocumentEvent e) {
-                textChanged();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-
-            }
-        });
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -237,10 +211,6 @@ public class newSuggestionForm extends javax.swing.JDialog {
         this.suggestedAutocomplete = null;
         dispose();
     }//GEN-LAST:event_cancleJButtonActionPerformed
-
-    private void dependentJTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dependentJTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_dependentJTextFieldActionPerformed
 
     private void fetchjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fetchjButtonActionPerformed
         // TODO add your handling code here:
@@ -296,6 +266,15 @@ public class newSuggestionForm extends javax.swing.JDialog {
 
     }//GEN-LAST:event_restultsJTableMousePressed
 
+
+    private void dependentJTextFieldInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_dependentJTextFieldInputMethodTextChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_dependentJTextFieldInputMethodTextChanged
+
+    private void selectionJTextFieldInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_selectionJTextFieldInputMethodTextChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_selectionJTextFieldInputMethodTextChanged
+
 //    /**
 //     * @param args the command line arguments
 //     */
@@ -340,13 +319,13 @@ public class newSuggestionForm extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancleJButton;
+    private javax.swing.JLabel dependentJLabel;
     private javax.swing.JTextField dependentJTextField;
     private javax.swing.JButton fetchjButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable restultsJTable;
     private javax.swing.JLabel selectionJLabel;
-    private javax.swing.JLabel dependentJLabel;
     private javax.swing.JTextField selectionJTextField;
     // End of variables declaration//GEN-END:variables
 
