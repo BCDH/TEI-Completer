@@ -97,24 +97,9 @@ public class newSuggestionForm extends javax.swing.JDialog {
 
         dependentJLabel.setText("Dependent:");
 
-        dependentJTextField.addInputMethodListener(new java.awt.event.InputMethodListener() {
-            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
-            }
-            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
-                dependentJTextFieldInputMethodTextChanged(evt);
-            }
-        });
-
         selectionJLabel.setText("Selection:");
 
         selectionJTextField.setMinimumSize(new java.awt.Dimension(200, 22));
-        selectionJTextField.addInputMethodListener(new java.awt.event.InputMethodListener() {
-            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
-            }
-            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
-                selectionJTextFieldInputMethodTextChanged(evt);
-            }
-        });
 
         fetchjButton.setText("Search...");
         fetchjButton.addActionListener(new java.awt.event.ActionListener() {
@@ -203,6 +188,39 @@ public class newSuggestionForm extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
+
+        // this will break the UI design in netbeans IDE but no alternative
+        // was found to get the text change event
+        selectionJTextField.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                textChanged();
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                textChanged();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+
+            }
+        });
+
+        dependentJTextField.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                textChanged();
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                textChanged();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+
+            }
+        });
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -266,14 +284,6 @@ public class newSuggestionForm extends javax.swing.JDialog {
 
     }//GEN-LAST:event_restultsJTableMousePressed
 
-
-    private void dependentJTextFieldInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_dependentJTextFieldInputMethodTextChanged
-        // TODO add your handling code here:
-    }//GEN-LAST:event_dependentJTextFieldInputMethodTextChanged
-
-    private void selectionJTextFieldInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_selectionJTextFieldInputMethodTextChanged
-        // TODO add your handling code here:
-    }//GEN-LAST:event_selectionJTextFieldInputMethodTextChanged
 
 //    /**
 //     * @param args the command line arguments
