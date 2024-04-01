@@ -1,5 +1,8 @@
 # TEI Completer
-[![Build Status](https://github.com/BCDH/TEI-Completer/actions/workflows/ci.yml/badge.svg)](https://github.com/BCDH/TEI-Completer/actions/workflows/ci.yml) [![Java 11+](https://img.shields.io/badge/java-11+-4c7e9f.svg)](http://java.oracle.com) [![License GPL 2](https://img.shields.io/badge/license-GPL%202-blue.svg)](https://www.gnu.org/licenses/gpl-2.0.html) [![Download](https://img.shields.io/badge/download-version%201.2.0-ff69b4.svg)](https://repo1.maven.org/maven2/org/humanistika/oxygen/tei-completer/1.2.0/tei-completer-1.2.0-oxygen-plugin.jar)
+[![Build Status](https://github.com/BCDH/TEI-Completer/actions/workflows/ci.yml/badge.svg)](https://github.com/BCDH/TEI-Completer/actions/workflows/ci.yml)
+[![Java 11+](https://img.shields.io/badge/java-11+-4c7e9f.svg)](http://java.oracle.com)
+[![License GPL 2](https://img.shields.io/badge/license-GPL%202-blue.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
+[![Download](https://img.shields.io/badge/download-version%201.2.0-ff69b4.svg)](https://repo1.maven.org/maven2/org/humanistika/oxygen/tei-completer/1.2.0/tei-completer-1.2.0-oxygen-plugin.jar)
 
 The TEI Completer is a highly customizable plugin for setting up and activating remote-driven autocompletions of attribute values in the [oXygen XML Editor](http://www.oxygenxml.com).  
 
