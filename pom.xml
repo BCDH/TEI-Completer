@@ -55,7 +55,7 @@
         <jersey.version>2.40</jersey.version>
         <slf4j.version>2.0.9</slf4j.version>
         <jaxb2-basics.version>0.13.1</jaxb2-basics.version>
-        <eclipse.persistence.version>2.7.10</eclipse.persistence.version>
+        <eclipse.persistence.version>4.0.2</eclipse.persistence.version>
         <junit.jupiter.version>5.9.3</junit.jupiter.version>
         <project.build.source>11</project.build.source>
         <project.build.target>11</project.build.target>
