@@ -22,3 +22,5 @@ jobs:
         run: mvn clean compile
       - name: Test
         run: mvn verify
+      - name: Javadoc
+        run: mvn javadoc:javadoc

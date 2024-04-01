@@ -69,6 +69,13 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <!-- NOTE(AR) needed for Javadoc generation to succeed -->
+            <groupId>com.oxygenxml</groupId>
+            <artifactId>oxygen-annotations</artifactId>
+            <version>${oxygen.sdk.version}</version>
+            <scope>provided</scope>  <!-- provided by Oxygen -->
+        </dependency>
+        <dependency>
             <groupId>org.mozilla</groupId>
             <artifactId>rhino</artifactId>
             <version>1.7.14</version>
@@ -292,6 +299,7 @@
                             <failOnWarning>true</failOnWarning>
                             <!-- ignore various runtime dependency warnings -->
                             <ignoredUnusedDeclaredDependencies>
+                                <ignoredUnusedDeclaredDependency>com.oxygenxml:oxygen-annotations</ignoredUnusedDeclaredDependency>
                                 <ignoredUnusedDeclaredDependency>net.sf.saxon:Saxon-HE</ignoredUnusedDeclaredDependency>
                                 <ignoredUnusedDeclaredDependency>org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-inmemory</ignoredUnusedDeclaredDependency>
                                 <ignoredUnusedDeclaredDependency>org.slf4j:slf4j-log4j12</ignoredUnusedDeclaredDependency>
@@ -459,6 +467,42 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.6.3</version>
+                <configuration>
+                    <source>${project.build.source}</source>
+
+                    <!-- Workaround for - generated-sources/xjc/org/humanistika/ns/tei_completer/package-info.java:8: error: unknown tag: javax.xml.bind.annotation.XmlSchema -->
+                    <excludePackageNames>org.humanistika.ns.tei_completer</excludePackageNames>
+
+                    <archive>
+                        <manifest>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <Build-Tag>${build-tag}</Build-Tag>
+                            <Git-Commit>${build-commit}</Git-Commit>
+                            <Git-Commit-Abbrev>${build-commit-abbrev}</Git-Commit-Abbrev>
+                            <Git-Commit-Timestamp>${build-tstamp}</Git-Commit-Timestamp>
+                            <Build-Version>${build-version}</Build-Version>
+                            <Build-Timestamp>${maven.build.timestamp}</Build-Timestamp>
+                            <Source-Repository>${project.scm.connection}</Source-Repository>
+                            <Description>${project.description}</Description>
+                            <Implementation-URL>${project.url}</Implementation-URL>
+                            <License>GNU General Public License, version 2</License>
+                        </manifestEntries>
+                    </archive>
+                    <additionalJOptions>
+                        <additionalJOption>-Xmaxerrs</additionalJOption>
+                        <additionalJOption>65536</additionalJOption>
+                        <additionalJOption>-Xmaxwarns</additionalJOption>
+                        <additionalJOption>65536</additionalJOption>
+                    </additionalJOptions>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

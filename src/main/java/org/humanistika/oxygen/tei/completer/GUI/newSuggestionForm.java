@@ -52,7 +52,12 @@ public class newSuggestionForm extends javax.swing.JDialog {
     private ArrayList<SuggestedAutocomplete> results = new ArrayList<>();
 
     /**
-     * Creates new form JDialogForm
+     * Creates new form JDialogForm.
+     *
+     * @param parent the AWT parent window object
+     * @param teiCompleter the TEI completer object
+     * @param autoCompleteContext the autocomplete context.
+     * @param context the editing context
      */
     public newSuggestionForm(java.awt.Frame parent, final TeiCompleter teiCompleter, final TeiCompleter.AutoCompleteContext autoCompleteContext, final WhatPossibleValuesHasAttributeContext context) {
         super(parent, ModalityType.DOCUMENT_MODAL);
