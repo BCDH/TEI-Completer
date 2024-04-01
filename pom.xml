@@ -28,6 +28,13 @@
         </developer>
     </developers>
 
+    <contributors>
+        <contributor>
+            <name>Younes Bahloul</name>
+            <organization>Evolved Binary</organization>
+        </contributor>
+    </contributors>
+
     <licenses>
         <license>
             <name>GNU General Public License, version 2</name>
