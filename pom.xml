@@ -66,7 +66,7 @@
             <groupId>com.oxygenxml</groupId>
             <artifactId>oxygen</artifactId>
             <version>${oxygen.sdk.version}</version>
-            <scope>provided</scope>
+            <scope>provided</scope>  <!-- provided by Oxygen -->
         </dependency>
         <dependency>
             <!-- NOTE(AR) needed for Javadoc generation to succeed -->
@@ -84,7 +84,8 @@
         <dependency>
             <groupId>net.sf.saxon</groupId>
             <artifactId>Saxon-HE</artifactId>
-            <version>11.4</version>  <!-- provided by Oxygen -->
+            <version>11.4</version>
+            <scope>provided</scope>  <!-- provided by Oxygen -->
         </dependency>
         <dependency>
             <groupId>com.evolvedbinary.xpath</groupId>
@@ -101,7 +102,7 @@
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-impl</artifactId>
             <version>2.3.3</version>
-            <scope>provided</scope>
+            <scope>provided</scope>  <!-- provided by Oxygen -->
         </dependency>
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
