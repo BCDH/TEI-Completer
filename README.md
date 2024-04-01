@@ -2,7 +2,7 @@
 [![Build Status](https://github.com/BCDH/TEI-Completer/actions/workflows/ci.yml/badge.svg)](https://github.com/BCDH/TEI-Completer/actions/workflows/ci.yml)
 [![Java 11+](https://img.shields.io/badge/java-11+-4c7e9f.svg)](http://java.oracle.com)
 [![License GPL 2](https://img.shields.io/badge/license-GPL%202-blue.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
-[![Download](https://img.shields.io/badge/download-version%201.2.0-ff69b4.svg)](https://repo1.maven.org/maven2/org/humanistika/oxygen/tei-completer/1.2.0/tei-completer-1.2.0-oxygen-plugin.jar)
+[![Download](https://img.shields.io/badge/download-version%201.2.1-ff69b4.svg)](https://repo1.maven.org/maven2/org/humanistika/oxygen/tei-completer/1.2.1/tei-completer-1.2.1-oxygen-plugin.jar)
 
 The TEI Completer is a highly customizable plugin for setting up and activating remote-driven autocompletions of attribute values in the [oXygen XML Editor](http://www.oxygenxml.com).  
 
@@ -27,9 +27,9 @@ The plugin has been developed at the [Belgrade Center for Digital Humanities](ht
 
 # Installation
 
-1. Download the precompiled binary of the TEI Completer from [here](https://repo1.maven.org/maven2/org/humanistika/oxygen/tei-completer/1.2.0/tei-completer-1.2.0-oxygen-plugin.jar) or [build from source](#building).
+1. Download the precompiled binary of the TEI Completer from [here](https://repo1.maven.org/maven2/org/humanistika/oxygen/tei-completer/1.2.1/tei-completer-1.2.1-oxygen-plugin.jar) or [build from source](#building).
 
-2. Copy the file `tei-completer-1.2.0-oxygen-plugin.jar` to `$OXYGEN_HOME/frameworks/tei`.
+2. Copy the file `tei-completer-1.2.1-oxygen-plugin.jar` to `$OXYGEN_HOME/frameworks/tei`.
 
 	- The location of `$OXYGEN_HOME` will depend on where you have installed Oxygen XML Editor. The following are the known
 default locations for Oxygen:
@@ -56,7 +56,7 @@ default locations for Oxygen:
 
 9. Select the *Classpath* tab, and then click on the `+` button under the list of paths.
 
-10. In the dialog box *Add resources to the classpath*, enter the following text `${framework}/tei-completer-1.2.0-oxygen-plugin.jar`, and then click the *OK* button.
+10. In the dialog box *Add resources to the classpath*, enter the following text `${framework}/tei-completer-1.2.1-oxygen-plugin.jar`, and then click the *OK* button.
 
 	![alt text](https://raw.githubusercontent.com/BCDH/TEI-Completer/master/doc/images/oxygen-edit-tei-p5-document-type-association.jpg "Editing the TEI P5 framework classpath")
 
