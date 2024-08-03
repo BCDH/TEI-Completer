@@ -401,6 +401,7 @@
                         <configuration>
                             <shadedArtifactAttached>true</shadedArtifactAttached>
                             <shadedClassifierName>oxygen-plugin</shadedClassifierName>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
                             <artifactSet>
                                 <excludes>
                                     <!-- Oxygen already ships with a version of these, so we needn't package them as well -->
